@@ -119,7 +119,7 @@ source $ZSH/oh-my-zsh.sh
 # ========😄😄😄 Base 😄😄😄=========
 # ======================================
 # 基本信息:
-export username="leivzy"
+export username="leivmox"
 export git_lib="$HOME/lambda"
 
 alias ..="cd ../"
@@ -170,9 +170,8 @@ gcco() {
 alias gaa='git add .'
 alias gpl='git pull'
 alias gph="git push"
-alias gcm=gc1
 
-function gc1() {
+function gcm() {
     git commit -m "$1"
 }
 
