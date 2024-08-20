@@ -147,6 +147,8 @@ alias pycharm='pycharm.sh'
 
 alias vim='nvim'
 
+alias nav='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
+
 #====gcc====
 gcco() {
   if [ -z "$1" ]; then
@@ -250,7 +252,12 @@ function cdsb() {
     echo ">>> Switched to GitHub:(${folder_name}) <<<"
 }
 
-
+function cdclib() {
+    cd ${git_lib}/C_lib
+    git remote set-url origin git@github.com:${username}/C_lib.git
+    local folder_name=$(basename "$(pwd)")
+    echo ">>> Switched to GitHub:(${folder_name}) <<<"
+}
 
 
 
@@ -282,3 +289,8 @@ export PATH=:$PATH:${IDEA_HOME}/bin
 
 export PyCharm_HOME=/usr/local/pycharm/pycharm-2024.1.4
 export PATH=:$PATH:${PyCharm_HOME}/bin
+
+export RANGER_LOAD_DEFAULT_RC=FALSE
+
+export VISUAL=nvim
+export EDITOR=nvim
