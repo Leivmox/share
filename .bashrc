@@ -107,7 +107,7 @@ function gacp() {
     git add . || { echo "错误：添加文件到暂存区失败。"; return 1; }
 
     # 尝试提交更改，使用默认提交信息 "更新"
-    git commit -m "更新" || { echo "错误：提交更改失败，请检查是否有需要提交的更改。"; return 1; }
+    git commit -m "update" || { echo "错误：提交更改失败，请检查是否有需要提交的更改。"; return 1; }
 
     # 尝试推送到远程仓库
     apush || { echo "错误：推送代码到远程仓库失败。"; return 1; }
