@@ -1,8 +1,20 @@
 # ======================================
 # ========😄😄😄 Base 😄😄😄=========
 # ======================================
+#一些基础配置,如:
+
+#配置git仓库所在文件夹
+# export git_lib="/d/lambda"
+
+#配置一些git仓库的简写,方便使用gr命令,如:
+# export py="Python"
+# export code="code_2023"
+# export web="JavaWeb"
+# export sb="SpringBoot"
+# export c="C_lib"
+
 # git用户名:
-export username="leivmox"
+# export username="leivmox"
 
 alias ..="cd ../"  # 快速返回上一级目录
 
