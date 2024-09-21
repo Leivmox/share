@@ -1,33 +1,74 @@
 # ======================================
 # ========😄😄😄 Base 😄😄😄=========
 # ======================================
-# 基本信息:
-export username="leivzy"
+# git用户名:
+export username="leivmox"
 
-alias ..="cd ../"
+alias ..="cd ../"  # 快速返回上一级目录
 
-alias ll='ls -lh --color'
-alias la='ls -lah --color'
-alias mv='mv -i'
-alias cp='cp -i'
+alias ll='ls -lh --color=auto --group-directories-first'  # 显示文件和目录的详细信息，自动上色并将目录优先显示
 
-alias scs='screen -S'
-alias scr='screen -r'
-alias scls='screen -ls'
-alias scx='screen -x'
+alias la='ls -lah --color=auto --group-directories-first'  # 显示所有文件（包括隐藏文件），详细信息，自动上色并将目录优先显示
 
-alias neo='neofetch'
+alias mv='mv -i -v'  # 移动文件时，提示是否覆盖已存在的文件，并显示详细信息
 
-alias vimzsh='vim ~/.zshrc'
-alias vimbash='vim ~/.bashrc'
-alias vimrc='vim ~/.vimrc'
+alias cp='cp -i -v'  # 复制文件时，提示是否覆盖已存在的文件，并显示详细信息
+
+alias scs='screen -S'  # 创建新的 screen 会话，使用指定的名称
+
+alias scr='screen -r'  # 恢复已断开的 screen 会话
+
+alias scls='screen -ls'  # 列出所有当前的 screen 会话
+
+alias scx='screen -x'  # 连接到已经存在的 screen 会话
+
+alias sck='screen -X quit'  # 强制终止当前 screen 会话
+
+alias neo='neofetch'  # 显示系统信息，包括操作系统、内核版本、硬件信息等
+
+alias vimzsh='vim ~/.zshrc'  # 使用 Vim 编辑 zsh 的配置文件 ~/.zshrc
+
+alias vimbash='vim ~/.bashrc'  # 使用 Vim 编辑 bash 的配置文件 ~/.bashrc
+
+alias vimrc='vim ~/.vimrc'  # 使用 Vim 编辑 Vim 的配置文件 ~/.vimrc
+
+
+#====gcc:创建out文件夹并将输出文件输出至out====
+gcco() {
+    # 检查是否提供了源文件名参数
+    if [ -z "$1" ]; then
+        echo "错误：未输入源文件！请提供一个 C 源文件作为参数。"
+        return 1
+    fi
+
+    # 检查 gcc 是否已安装
+    if ! command -v gcc &> /dev/null; then
+        echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
+        return 1
+    fi
+
+    # 检查源文件是否存在
+    if [ ! -f "$1" ]; then
+        echo "错误：源文件 '$1' 不存在或不可访问，请检查文件路径。"
+        return 1
+    fi
+
+    # 创建输出目录
+    mkdir -p out || { echo "错误：无法创建输出目录 'out'。"; return 1; }
+
+    # 编译源文件
+    command gcc "$1" -o out/"${1%.*}" || { echo "错误：编译失败，请检查源代码。"; return 1; }
+
+    # 编译成功提示
+    echo "编译成功！可执行文件位于 out/${1%.*}"
+}
+
+
 
 
 # ======================================
 # ========🚀🚀🚀 Git 🚀🚀🚀==========
 # ======================================
-
-
 
 # ====git基础配置====
 alias gaa='git add .'
@@ -35,93 +76,164 @@ alias gpl='git pull'
 alias gph="git push"
 alias gcm=gc
 
+# ====简化commit命令====
 function gc() {
-    git commit -m "$1"
+    # 检查是否提供了提交信息
+    if [ -z "$1" ]; then
+        echo "错误：提交信息是必需的，请提供提交信息。"
+        return 1
+    fi
+
+    # 检查当前目录是否为 Git 仓库
+    git rev-parse --is-inside-work-tree &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "错误：当前目录不是一个有效的 Git 仓库，请在 Git 仓库目录中执行此命令。"
+        return 1
+    fi
+
+    # 尝试提交更改
+    git commit -m "$1" || { echo "错误：提交失败，请检查是否有需要提交的更改。"; return 1; }
+
+    echo ">>> 提交成功：$1 <<<"
+}
+
+
+# ====一键推送====
+function gacp() {
+    # 调用检查函数
+    check_git_repo || return 1
+
+    # 尝试添加所有更改到暂存区
+    git add . || { echo "错误：添加文件到暂存区失败。"; return 1; }
+
+    # 尝试提交更改，使用默认提交信息 "更新"
+    git commit -m "更新" || { echo "错误：提交更改失败，请检查是否有需要提交的更改。"; return 1; }
+
+    # 尝试推送到远程仓库
+    apush || { echo "错误：推送代码到远程仓库失败。"; return 1; }
+
+    # 成功提示
+    echo ">>> 代码已成功提交并推送到远程仓库！ <<<"
 }
 
 
 # ====切换仓库====
 function gitee() {
+    # 调用检查函数
+    check_git_repo || return 1
+
+    # 获取当前文件夹名称作为仓库名
     local folder_name=$(basename "$(pwd)")
-    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git"
-    echo ">>> Switched to Gitee:(${folder_name}) <<<"
+
+    # 尝试设置 Gitee 的远程仓库 URL
+    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || { echo "错误：设置 Gitee 的远程仓库 URL 失败。"; return 1; }
+
+    echo ">>> 已切换到 Gitee 仓库：(${folder_name}) <<<"
 }
 
 function github() {
+    # 调用检查函数
+    check_git_repo || return 1
+
+    # 获取当前文件夹名称作为仓库名
     local folder_name=$(basename "$(pwd)")
-    git remote set-url origin "git@github.com:${username}/${folder_name}.git"
-    echo ">>> Switched to GitHub:(${folder_name}) <<<"
+
+    # 尝试设置 GitHub 的远程仓库 URL
+    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || { echo "错误：设置 GitHub 的远程仓库 URL 失败。"; return 1; }
+
+    echo ">>> 已切换到 GitHub 仓库：(${folder_name}) <<<"
 }
+
 
 
 # 同时将代码推送到 GitHub 和 Gitee
 
 function apush() {
+    # 调用检查函数
+    check_git_repo || return 1
+
+    # 获取当前文件夹名称作为仓库名
     local folder_name=$(basename "$(pwd)")
+
+    # 获取当前分支名
     local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    if [ $? -ne 0 ]; then
+        echo "错误：获取当前分支失败，请确认您处于一个 Git 仓库中。"
+        return 1
+    fi
 
     echo "==========================================="
-    echo "   In branch: ${current_branch}   "
+    echo "   当前分支：${current_branch}   "
     echo "==========================================="
 
-    echo ">>> Switching to Gitee:(${folder_name}) <<<"
-    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git"
-    git push origin "${current_branch}"
+    # 推送到 Gitee
+    echo ">>> 正在切换到 Gitee 仓库：(${folder_name}) <<<"
+    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || { echo "错误：设置 Gitee 的远程仓库 URL 失败。"; return 1; }
+    git push origin "${current_branch}" || { echo "错误：推送代码到 Gitee 失败。"; return 1; }
 
     echo ""
 
-    echo ">>> Switching to GitHub:(${folder_name}) <<<"
-    git remote set-url origin "git@github.com:${username}/${folder_name}.git"
-    git push origin "${current_branch}"
+    # 推送到 GitHub
+    echo ">>> 正在切换到 GitHub 仓库：(${folder_name}) <<<"
+    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || { echo "错误：设置 GitHub 的远程仓库 URL 失败。"; return 1; }
+    git push origin "${current_branch}" || { echo "错误：推送代码到 GitHub 失败。"; return 1; }
 
+    echo ">>> 代码已成功推送到 Gitee 和 GitHub！ <<<"
 }
+
 
 
 # ====进入目标仓库,并切换当前文件夹名字相同的github远程仓库====
-function cdcode() {
-    cd /d/lambda/code_2023
-    git remote set-url origin git@github.com:${username}/code_2023.git
-    local folder_name=$(basename "$(pwd)")
-    echo ">>> Switched to GitHub:(${folder_name}) <<<"
+#gr=go repository
+function gr() {
+    # 检查是否传入参数
+    if [ -z "$1" ]; then
+        echo "Error: No repository specified. Usage: cdrepo <repo_short_name>"
+        return 1
+    fi
+
+    # 获取仓库的简写名称
+    local repo_short_name=$1
+
+    # 使用简写名称获取实际的仓库名
+    local repo_name=${!repo_short_name}
+
+    # 检查仓库名是否存在
+    if [ -z "$repo_name" ]; then
+        echo "Error: Repository short name '$repo_short_name' is not defined."
+        return 1
+    fi
+
+    # 目标目录
+    local target_dir="${git_lib}/${repo_name}"
+
+    # 切换到目标目录
+    cd "$target_dir" || { echo "Error: Directory ${target_dir} does not exist or cannot be accessed."; return 1; }
+
+    # 尝试设置远程仓库的 URL
+    git remote set-url origin git@github.com:${username}/${repo_name}.git || { echo "Error: Failed to set remote URL for GitHub repository."; return 1; }
+
+    # 如果成功，则显示成功信息
+    echo ">>> Switched to GitHub:(${repo_name}) <<<"
 }
 
-function cdweb() {
-    cd /d/lambda/JavaWeb
-    git remote set-url origin git@github.com:${username}/JavaWeb.git
-    local folder_name=$(basename "$(pwd)")
-    echo ">>> Switched to GitHub:(${folder_name}) <<<"
-}
-
-function cdpy() {
-    cd /d/lambda/Python
-    git remote set-url origin git@github.com:${username}/Python.git
-    local folder_name=$(basename "$(pwd)")
-    echo ">>> Switched to GitHub:(${folder_name}) <<<"
-}
-
-function cdsb() {
-    cd /d/lambda/SpringBoot
-    git remote set-url origin git@github.com:${username}/SpringBoot.git
-    local folder_name=$(basename "$(pwd)")
-    echo ">>> Switched to GitHub:(${folder_name}) <<<"
-}
 
 
 
-
-
-
-# ====一些怪东西====
+# ====测试用====
 function hhh() {
     local folder_name=$(basename "$(pwd)")
         echo "${username}"
-        echo "2"
-        echo "3"
-        echo "remote set-url origin "git@gitee.com:${username}/${folder_name}.git""
+        echo "${folder_name}"
 }
 
 
-function dqwjj() {
-    local folder_name=$(basename "$(pwd)")
-    echo ${folder_name}
+# 检查当前目录是否为 Git 仓库的通用函数
+function check_git_repo() {
+    git rev-parse --is-inside-work-tree &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "错误：当前目录不是一个有效的 Git 仓库，请在 Git 仓库目录中执行此命令。"
+        return 1
+    fi
+    return 0
 }
