@@ -96,12 +96,8 @@ function gc() {
         return 1
     fi
 
-    # 检查当前目录是否为 Git 仓库
-    git rev-parse --is-inside-work-tree &>/dev/null
-    if [ $? -ne 0 ]; then
-        echo "错误：当前目录不是一个有效的 Git 仓库，请在 Git 仓库目录中执行此命令。"
-        return 1
-    fi
+    # 调用检查函数
+    check_git_repo || return 1
 
     # 尝试提交更改
     git commit -m "$1" || { echo "错误：提交失败，请检查是否有需要提交的更改。"; return 1; }
@@ -159,7 +155,7 @@ function github() {
 
 
 # 同时将代码推送到 GitHub 和 Gitee
-
+#apush = all push
 function apush() {
     # 调用检查函数
     check_git_repo || return 1
@@ -261,12 +257,6 @@ function gr() {
 
 
 
-# ====测试用====
-function hhh() {
-    local folder_name=$(basename "$(pwd)")
-        echo "${username}"
-        echo "${folder_name}"
-}
 
 
 # 检查当前目录是否为 Git 仓库的通用函数
@@ -278,3 +268,100 @@ function check_git_repo() {
     fi
     return 0
 }
+
+
+# ====测试用====
+
+# hhh 函数：显示当前 Git 仓库详细信息、用户信息、系统信息等
+function hhh() {
+    # 获取当前文件夹名称
+    local folder_name=$(basename "$(pwd)")
+
+    # 分隔符
+    echo "==========================================="
+
+    # 显示当前文件夹路径
+    echo ">>> 当前文件夹路径："
+    echo "$(pwd)"
+
+    echo ""
+
+    # 显示 Git 远程仓库信息
+    echo ">>> 当前 Git 远程仓库信息："
+    if git remote -v &>/dev/null; then
+        git remote -v
+    else
+        echo "错误：当前目录不是一个 Git 仓库。"
+    fi
+
+    echo ""
+
+    # 显示当前分支名
+    echo ">>> 当前分支名："
+    local current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+    if [ -n "$current_branch" ]; then
+        echo "$current_branch"
+    else
+        echo "错误：无法获取当前分支名。"
+    fi
+
+    echo ""
+
+    # 显示最后一次提交信息
+    echo ">>> 最后一次提交信息："
+    if git log -1 --pretty=format:"%h - %an: %s" &>/dev/null; then
+        git log -1 --pretty=format:"哈希: %h | 作者: %an | 信息: %s"
+    else
+        echo "错误：无法获取提交信息。"
+    fi
+
+    echo ""
+
+    # 显示当前仓库状态
+    echo ">>> 当前仓库状态："
+    if git status -s &>/dev/null; then
+        if [ -z "$(git status -s)" ]; then
+            echo "工作目录干净，没有未提交的更改。"
+        else
+            echo "有未提交的更改："
+            git status -s
+        fi
+    else
+        echo "错误：无法获取仓库状态。"
+    fi
+
+    echo ""
+
+    # 显示当前 Git 用户配置
+    echo ">>> 当前 Git 用户配置："
+    git config --list --show-origin | grep -E 'user.name|user.email' || echo "错误：无法获取 Git 用户配置。"
+
+    echo ""
+
+    # 显示系统信息
+    echo ">>> 系统信息："
+    echo "操作系统：$(uname -o) $(uname -r)"
+    echo "Shell 版本：$BASH_VERSION"
+
+    echo ""
+
+    # 显示当前用户名
+    echo ">>> 当前自定义用户名（环境变量）："
+    echo "${username:-'未定义'}" # 如果 username 未定义，则显示 '未定义'
+
+    echo ""
+
+    # 显示当前文件夹名称
+    echo ">>> 当前文件夹名称："
+    echo "${folder_name}"
+
+    # 分隔符
+    echo "==========================================="
+}
+
+# 使用说明：
+# 1. 执行 `hhh` 命令查看当前 Git 仓库详细信息、系统信息等。
+# 2. 确保在 Git 仓库目录下使用此命令，否则部分信息无法显示。
+
+
+alias cdsb="cd /d/Lambda/git_repo/SpringBoot"
