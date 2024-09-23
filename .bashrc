@@ -178,11 +178,19 @@ function apush() {
     echo "   当前分支：${current_branch}   "
     echo "==========================================="
 
+    # 初始化状态变量
+    local gitee_status=0
+    local github_status=0
+
     # 推送到 Gitee
     echo ">>> 正在切换到 Gitee 仓库：(${folder_name}) <<<"
     git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || { echo "错误：设置 Gitee 的远程仓库 URL 失败。"; gitee_status=1; }
     git push origin "${current_branch}" || { echo "错误：推送代码到 Gitee 失败。"; gitee_status=1; }
-    [[ $gitee_status -eq 1 ]] && echo "Gitee 推送失败，继续推送到 GitHub..."
+    if [ $gitee_status -eq 1 ]; then
+        echo "Gitee 推送失败，继续推送到 GitHub..."
+    else
+        echo ">>> 代码已成功推送到 Gitee！ <<<"
+    fi
 
     echo ""
 
@@ -190,15 +198,20 @@ function apush() {
     echo ">>> 正在切换到 GitHub 仓库：(${folder_name}) <<<"
     git remote set-url origin "git@github.com:${username}/${folder_name}.git" || { echo "错误：设置 GitHub 的远程仓库 URL 失败。"; github_status=1; }
     git push origin "${current_branch}" || { echo "错误：推送代码到 GitHub 失败。"; github_status=1; }
+    if [ $github_status -eq 1 ]; then
+        echo "GitHub 推送失败。"
+    else
+        echo ">>> 代码已成功推送到 GitHub！ <<<"
+    fi
 
     # 检查推送结果
-    if [[ $gitee_status -eq 1 && $github_status -eq 1 ]]; then
+    if [ $gitee_status -eq 1 ] && [ $github_status -eq 1 ]; then
         echo ">>> Gitee 和 GitHub 推送均失败！ <<<"
         return 1
-    elif [[ $gitee_status -eq 1 ]]; then
+    elif [ $gitee_status -eq 1 ]; then
         echo ">>> Gitee 推送失败，但 GitHub 推送成功！ <<<"
         return 0
-    elif [[ $github_status -eq 1 ]]; then
+    elif [ $github_status -eq 1 ]; then
         echo ">>> GitHub 推送失败，但 Gitee 推送成功！ <<<"
         return 0
     else
@@ -206,6 +219,7 @@ function apush() {
         return 0
     fi
 }
+
 
 
 
