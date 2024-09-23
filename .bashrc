@@ -363,5 +363,4 @@ function hhh() {
 # 1. 执行 `hhh` 命令查看当前 Git 仓库详细信息、系统信息等。
 # 2. 确保在 Git 仓库目录下使用此命令，否则部分信息无法显示。
 
-
-alias cdsb="cd /d/Lambda/git_repo/SpringBoot"
+alias 123="echo "123123123""
