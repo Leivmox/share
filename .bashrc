@@ -16,43 +16,42 @@
 # git用户名:
 # export username="Leivmox"
 
-alias ..="cd ../"  # 快速返回上一级目录
+alias ..="cd ../" # 快速返回上一级目录
 
-alias ll='ls -lh --color=auto --group-directories-first'  # 显示文件和目录的详细信息，自动上色并将目录优先显示
+alias ll='ls -lh --color=auto --group-directories-first' # 显示文件和目录的详细信息，自动上色并将目录优先显示
 
-alias la='ls -lah --color=auto --group-directories-first'  # 显示所有文件（包括隐藏文件），详细信息，自动上色并将目录优先显示
+alias la='ls -lah --color=auto --group-directories-first' # 显示所有文件（包括隐藏文件），详细信息，自动上色并将目录优先显示
 
-alias mv='mv -i -v'  # 移动文件时，提示是否覆盖已存在的文件，并显示详细信息
+alias mv='mv -i -v' # 移动文件时，提示是否覆盖已存在的文件，并显示详细信息
 
-alias cp='cp -i -v'  # 复制文件时，提示是否覆盖已存在的文件，并显示详细信息
+alias cp='cp -i -v' # 复制文件时，提示是否覆盖已存在的文件，并显示详细信息
 
-alias scs='screen -S'  # 创建新的 screen 会话，使用指定的名称
+alias scs='screen -S' # 创建新的 screen 会话，使用指定的名称
 
-alias scr='screen -r'  # 恢复已断开的 screen 会话
+alias scr='screen -r' # 恢复已断开的 screen 会话
 
-alias scls='screen -ls'  # 列出所有当前的 screen 会话
+alias scls='screen -ls' # 列出所有当前的 screen 会话
 
-alias scx='screen -x'  # 连接到已经存在的 screen 会话
+alias scx='screen -x' # 连接到已经存在的 screen 会话
 
-alias sck='screen -X quit'  # 强制终止当前 screen 会话
+alias sck='screen -X quit' # 强制终止当前 screen 会话
 
-alias neo='neofetch'  # 显示系统信息，包括操作系统、内核版本、硬件信息等
+alias neo='neofetch' # 显示系统信息，包括操作系统、内核版本、硬件信息等
 
-alias vimzsh='vim ~/.zshrc'  # 使用 Vim 编辑 zsh 的配置文件 ~/.zshrc
+alias vimzsh='vim ~/.zshrc' # 使用 Vim 编辑 zsh 的配置文件 ~/.zshrc
 
-alias vimbash='vim ~/.bashrc'  # 使用 Vim 编辑 bash 的配置文件 ~/.bashrc
+alias vimbash='vim ~/.bashrc' # 使用 Vim 编辑 bash 的配置文件 ~/.bashrc
 
-alias vimrc='vim ~/.vimrc'  # 使用 Vim 编辑 Vim 的配置文件 ~/.vimrc
-
+alias vimrc='vim ~/.vimrc' # 使用 Vim 编辑 Vim 的配置文件 ~/.vimrc
 
 # 颜色定义（全局变量）
 
-    RED='\033[0;31m'   # 红色，用于错误信息
-    GREEN='\033[0;32m' # 绿色，用于成功信息
-    YELLOW='\033[0;33m' # 黄色，用于警告或提示信息
-    BOLD='\033[1m'     # 加粗
-    BLUE='\033[0;34m'  # 蓝色，用于标题或目录显示
-    NC='\033[0m'       # 无颜色，重置颜色
+RED='\033[0;31m'    # 红色，用于错误信息
+GREEN='\033[0;32m'  # 绿色，用于成功信息
+YELLOW='\033[0;33m' # 黄色，用于警告或提示信息
+BOLD='\033[1m'      # 加粗
+BLUE='\033[0;34m'   # 蓝色，用于标题或目录显示
+NC='\033[0m'        # 无颜色，重置颜色
 
 #====gcc:创建out文件夹并将输出文件输出至out====
 gcco() {
@@ -63,7 +62,7 @@ gcco() {
     fi
 
     # 检查 gcc 是否已安装
-    if ! command -v gcc &> /dev/null; then
+    if ! command -v gcc &>/dev/null; then
         echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
         return 1
     fi
@@ -75,17 +74,20 @@ gcco() {
     fi
 
     # 创建输出目录
-    mkdir -p out || { echo "错误：无法创建输出目录 'out'。"; return 1; }
+    mkdir -p out || {
+        echo "错误：无法创建输出目录 'out'。"
+        return 1
+    }
 
     # 编译源文件
-    command gcc "$1" -o out/"${1%.*}" || { echo "错误：编译失败，请检查源代码。"; return 1; }
+    command gcc "$1" -o out/"${1%.*}" || {
+        echo "错误：编译失败，请检查源代码。"
+        return 1
+    }
 
     # 编译成功提示
     echo "编译成功！可执行文件位于 out/${1%.*}"
 }
-
-
-
 
 # ======================================
 # ========🚀🚀🚀 Git 🚀🚀🚀==========
@@ -98,6 +100,8 @@ alias gph="git push"
 alias gcm=gc
 alias gplall="execute_gpl_and_hhh_in_folders"
 alias gacpall="execute_gpl_gacp_and_hhh_in_folders"
+alias gitall='gr && gacpall'
+
 
 # ====简化commit命令====
 function gc() {
@@ -111,11 +115,13 @@ function gc() {
     check_git_repo || return 1
 
     # 尝试提交更改
-    git commit -m "$1" || { echo "错误：提交失败，请检查是否有需要提交的更改。"; return 1; }
+    git commit -m "$1" || {
+        echo "错误：提交失败，请检查是否有需要提交的更改。"
+        return 1
+    }
 
     echo ">>> 提交成功：$1 <<<"
 }
-
 
 # ====一键推送====
 function gacp() {
@@ -124,7 +130,10 @@ function gacp() {
     check_git_repo || return 1
 
     # 尝试添加所有更改到暂存区
-    git add . || { echo -e "${RED}错误：添加文件到暂存区失败。${NC}"; return 1; }
+    git add . || {
+        echo -e "${RED}错误：添加文件到暂存区失败。${NC}"
+        return 1
+    }
 
     # 检查是否有需要提交的更改
     if git diff-index --quiet HEAD --; then
@@ -134,16 +143,20 @@ function gacp() {
     fi
 
     # 尝试提交更改，使用默认提交信息 "更新"
-    git commit -m "update" || { echo -e "${RED}错误：提交更改失败，请检查是否有需要提交的更改。${NC}"; return 1; }
+    git commit -m "update" || {
+        echo -e "${RED}错误：提交更改失败，请检查是否有需要提交的更改。${NC}"
+        return 1
+    }
 
     # 尝试推送到远程仓库
-    apush || { echo -e "${RED}错误：推送代码到远程仓库失败。${NC}"; return 1; }
+    apush || {
+        echo -e "${RED}错误：推送代码到远程仓库失败。${NC}"
+        return 1
+    }
 
     # 成功提示
     echo -e "${GREEN}>>> 代码已成功提交并推送到远程仓库！ <<<${NC}"
 }
-
-
 
 # ====切换仓库====
 function gitee() {
@@ -155,7 +168,10 @@ function gitee() {
     local folder_name=$(basename "$(pwd)")
 
     # 尝试设置 Gitee 的远程仓库 URL
-    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || { echo -e "${RED}错误：设置 Gitee 的远程仓库 URL 失败。${NC}"; return 1; }
+    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || {
+        echo -e "${RED}错误：设置 Gitee 的远程仓库 URL 失败。${NC}"
+        return 1
+    }
 
     echo -e "${GREEN}>>> 已切换到 Gitee 仓库：${BLUE}(${folder_name})${NC} <<<"
 }
@@ -169,18 +185,17 @@ function github() {
     local folder_name=$(basename "$(pwd)")
 
     # 尝试设置 GitHub 的远程仓库 URL
-    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || { echo -e "${RED}错误：设置 GitHub 的远程仓库 URL 失败。${NC}"; return 1; }
+    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || {
+        echo -e "${RED}错误：设置 GitHub 的远程仓库 URL 失败。${NC}"
+        return 1
+    }
 
     echo -e "${GREEN}>>> 已切换到 GitHub 仓库：${BLUE}(${folder_name})${NC} <<<"
 }
 
-
-
-
 # 同时将代码推送到 GitHub 和 Gitee
 #apush = all push
 function apush() {
-
 
     # 调用检查函数
     check_git_repo || return 1
@@ -205,8 +220,14 @@ function apush() {
 
     # 推送到 Gitee
     echo -e "${YELLOW}>>> 正在切换到 Gitee 仓库：(${folder_name}) <<<${NC}"
-    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || { echo -e "${RED}错误：设置 Gitee 的远程仓库 URL 失败。${NC}"; gitee_status=1; }
-    git push origin "${current_branch}" || { echo -e "${RED}错误：推送代码到 Gitee 失败。${NC}"; gitee_status=1; }
+    git remote set-url origin "git@gitee.com:${username}/${folder_name}.git" || {
+        echo -e "${RED}错误：设置 Gitee 的远程仓库 URL 失败。${NC}"
+        gitee_status=1
+    }
+    git push origin "${current_branch}" || {
+        echo -e "${RED}错误：推送代码到 Gitee 失败。${NC}"
+        gitee_status=1
+    }
     if [ $gitee_status -eq 1 ]; then
         echo -e "${RED}Gitee 推送失败，继续推送到 GitHub...${NC}"
     else
@@ -217,8 +238,14 @@ function apush() {
 
     # 推送到 GitHub
     echo -e "${YELLOW}>>> 正在切换到 GitHub 仓库：(${folder_name}) <<<${NC}"
-    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || { echo -e "${RED}错误：设置 GitHub 的远程仓库 URL 失败。${NC}"; github_status=1; }
-    git push origin "${current_branch}" || { echo -e "${RED}错误：推送代码到 GitHub 失败。${NC}"; github_status=1; }
+    git remote set-url origin "git@github.com:${username}/${folder_name}.git" || {
+        echo -e "${RED}错误：设置 GitHub 的远程仓库 URL 失败。${NC}"
+        github_status=1
+    }
+    git push origin "${current_branch}" || {
+        echo -e "${RED}错误：推送代码到 GitHub 失败。${NC}"
+        github_status=1
+    }
     if [ $github_status -eq 1 ]; then
         echo -e "${RED}GitHub 推送失败。${NC}"
     else
@@ -241,17 +268,16 @@ function apush() {
     fi
 }
 
-
-
-
-
 # ====进入目标仓库,并切换当前文件夹名字相同的github远程仓库====
 #gr=go repository
 function gr() {
 
     # 如果没有传入参数，直接进入 git_lib 目录
     if [ -z "$1" ]; then
-        cd "$git_lib" || { echo -e "${RED}错误：目录 ${git_lib} 不存在或无法访问。${NC}"; return 1; }
+        cd "$git_lib" || {
+            echo -e "${RED}错误：目录 ${git_lib} 不存在或无法访问。${NC}"
+            return 1
+        }
         echo -e "${GREEN}>>> 已切换到 git_lib 目录：(${git_lib}) <<<${NC}"
         return 0
     fi
@@ -265,7 +291,10 @@ function gr() {
     # 如果参数没有定义，直接进入 git_lib 下与传入参数同名的文件夹
     if [ -z "$repo_name" ]; then
         local target_dir="${git_lib}/${repo_short_name}"
-        cd "$target_dir" || { echo -e "${RED}错误：目录 ${target_dir} 不存在或无法访问。${NC}"; return 1; }
+        cd "$target_dir" || {
+            echo -e "${RED}错误：目录 ${target_dir} 不存在或无法访问。${NC}"
+            return 1
+        }
         echo -e "${GREEN}>>> 已切换到目录：(${repo_short_name}) <<<${NC}"
         return 0
     fi
@@ -274,20 +303,20 @@ function gr() {
     local target_dir="${git_lib}/${repo_name}"
 
     # 切换到目标目录
-    cd "$target_dir" || { echo -e "${RED}错误：目录 ${target_dir} 不存在或无法访问。${NC}"; return 1; }
+    cd "$target_dir" || {
+        echo -e "${RED}错误：目录 ${target_dir} 不存在或无法访问。${NC}"
+        return 1
+    }
 
     # 尝试设置远程仓库的 URL
-    git remote set-url origin git@github.com:${username}/${repo_name}.git || { echo -e "${RED}错误：设置 GitHub 仓库的远程 URL 失败。${NC}"; return 1; }
+    git remote set-url origin git@github.com:${username}/${repo_name}.git || {
+        echo -e "${RED}错误：设置 GitHub 仓库的远程 URL 失败。${NC}"
+        return 1
+    }
 
     # 如果成功，则显示成功信息
     echo -e "${GREEN}>>> 已切换到 GitHub 仓库：(${repo_name}) <<<${NC}"
 }
-
-
-
-
-
-
 
 # 检查当前目录是否为 Git 仓库的通用函数
 function check_git_repo() {
@@ -300,8 +329,6 @@ function check_git_repo() {
     fi
     return 0
 }
-
-
 
 function hhh() {
 
@@ -394,11 +421,6 @@ function hhh() {
 # 1. 执行 `hhh` 命令查看当前 Git 仓库详细信息、系统信息等。
 # 2. 确保在 Git 仓库目录下使用此命令，否则部分信息无法显示。
 
-
-
-
-
-
 function execute_gpl_and_hhh_in_folders() {
 
     # 初始化存储执行失败的文件夹列表
@@ -407,10 +429,14 @@ function execute_gpl_and_hhh_in_folders() {
     # 遍历当前目录下的所有子文件夹
     for folder in */; do
         # 确认是文件夹
-        if [ -d "$folder" ];then
+        if [ -d "$folder" ]; then
             # 显著显示进入的文件夹名称（加粗蓝色）
             echo -e "${YELLOW}>>> 进入文件夹：${BOLD}${BLUE}${folder}${NC} <<<"
-            cd "$folder" || { echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"; gpl_failed_folders+=("${folder}"); continue; }
+            cd "$folder" || {
+                echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"
+                gpl_failed_folders+=("${folder}")
+                continue
+            }
 
             # 执行 gpl 函数
             echo -e "${YELLOW}>>> 正在执行 gpl <<<${NC}"
@@ -427,7 +453,10 @@ function execute_gpl_and_hhh_in_folders() {
             hhh
 
             # 返回上一级目录
-            cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
+            cd .. || {
+                echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"
+                return 1
+            }
         fi
     done
 
@@ -444,86 +473,26 @@ function execute_gpl_and_hhh_in_folders() {
     fi
 }
 
-
-
-
-# function execute_gpl_gacp_and_hhh_in_folders() {
-
-#     # 初始化存储执行失败的文件夹列表
-#     local gpl_failed_folders=()
-#     local gacp_failed_folders=()
-
-#     # 遍历当前目录下的所有子文件夹
-#     for folder in */; do
-#         # 确认是文件夹
-#         if [ -d "$folder" ]; then
-#             # 使用加粗和蓝色显示文件夹名称，使其更加醒目
-#             echo -e "${YELLOW}>>> 进入文件夹：${BOLD}${BLUE}${folder}${NC} <<<"
-#             cd "$folder" || { echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"; gpl_failed_folders+=("${folder}"); gacp_failed_folders+=("${folder}"); continue; }
-
-#             # 执行 gpl 函数
-#             echo -e "${YELLOW}>>> 正在执行 gpl <<<${NC}"
-#             gpl
-#             if [ $? -ne 0 ]; then
-#                 echo -e "${RED}错误：执行 gpl 失败，跳过文件夹 ${folder} 的 gacp 和 hhh 命令。${NC}"
-#                 gpl_failed_folders+=("${folder}")
-#                 cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
-#                 continue  # 由于 gpl 失败，跳过当前文件夹的 gacp 和 hhh 执行
-#             fi
-
-#             # 如果 gpl 成功，继续执行 gacp 命令
-#             echo -e "${YELLOW}>>> 正在执行 gacp <<<${NC}"
-#             gacp
-#             if [ $? -ne 0 ]; then
-#                 echo -e "${RED}错误：执行 gacp 失败，文件夹 ${folder}。执行 hhh。${NC}"
-#                 gacp_failed_folders+=("${folder}")
-#                 hhh  # gacp 失败时才执行 hhh
-#             fi
-
-#             # 返回上一级目录
-#             cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
-#         fi
-#     done
-
-#     # 检查并输出 gpl 执行失败的文件夹
-#     if [ ${#gpl_failed_folders[@]} -gt 0 ]; then
-#         echo -e "${RED}==========================================="
-#         echo "以下文件夹执行 gpl 失败："
-#         for folder in "${gpl_failed_folders[@]}"; do
-#             echo "- ${folder}"
-#         done
-#         echo "==========================================="
-#         # echo "===========================================${NC}"
-#     else
-#         echo -e "${GREEN}>>> 所有文件夹 gpl 执行成功！ <<<${NC}"
-#     fi
-
-#     # 检查并输出 gacp 执行失败的文件夹
-#     if [ ${#gacp_failed_folders[@]} -gt 0 ]; then
-#         echo -e "${RED}==========================================="
-#         echo "以下文件夹执行 gacp 失败："
-#         for folder in "${gacp_failed_folders[@]}"; do
-#             echo "- ${folder}"
-#         done
-#         echo "===========================================${NC}"
-#     elif [ ${#gpl_failed_folders[@]} -eq 0 ]; then
-#         # 如果所有 gpl 都成功且 gacp 没有失败，显示全部成功
-#         echo -e "${GREEN}>>> 所有文件夹 gpl 和 gacp 执行成功！ <<<${NC}"
-#     fi
-# }
 function execute_gpl_gacp_and_hhh_in_folders() {
 
     # 初始化存储执行失败的文件夹列表
     local gpl_failed_folders=()
     local gacp_failed_folders=()
+    local gacp_executed=false # 标志变量，跟踪是否有执行 gacp
+    local gacp_skipped=true   # 标志变量，跟踪是否所有 gacp 都跳过
 
     # 遍历当前目录下的所有子文件夹
     for folder in */; do
         # 确认是文件夹
         if [ -d "$folder" ]; then
             # 使用加粗和蓝色显示文件夹名称，使其更加醒目
-            echo -e "${YELLOW}>>> 进入文件夹：${BOLD}${BLUE}${folder}${NC} <<<"
-            cd "$folder" || { echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"; gpl_failed_folders+=("${folder}"); gacp_failed_folders+=("${folder}"); continue; }
+            echo -e "${YELLOW}>>> 进入文件夹：${BLUE}${folder}${NC} <<<"
+            cd "$folder" || {
+                echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"
+                gpl_failed_folders+=("${folder}")
+                gacp_failed_folders+=("${folder}")
+                continue
+            }
 
             # 执行 gpl 函数
             echo -e "${YELLOW}>>> 正在执行 gpl <<<${NC}"
@@ -531,35 +500,46 @@ function execute_gpl_gacp_and_hhh_in_folders() {
             if [ $? -ne 0 ]; then
                 echo -e "${RED}错误：执行 gpl 失败，跳过文件夹 ${folder} 的 gacp 和 hhh 命令。${NC}"
                 gpl_failed_folders+=("${folder}")
-                cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
-                continue  # 由于 gpl 失败，跳过当前文件夹的 gacp 和 hhh 执行
+                cd .. || {
+                    echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"
+                    return 1
+                }
+                continue # 由于 gpl 失败，跳过当前文件夹的 gacp 和 hhh 执行
             fi
 
             # 如果 gpl 成功，继续执行 gacp 命令
             echo -e "${YELLOW}>>> 正在执行 gacp <<<${NC}"
+            gacp_executed=true # 标记为 true，因为执行了 gacp
             gacp
             if [ $? -ne 0 ]; then
                 echo -e "${RED}错误：执行 gacp 失败，文件夹 ${folder}。执行 hhh。${NC}"
                 gacp_failed_folders+=("${folder}")
-                hhh  # gacp 失败时才执行 hhh
+                hhh # gacp 失败时才执行 hhh
             else
                 # 如果工作区干净，gacp 返回成功，这不应被视为失败
                 echo -e "${GREEN}>>> 文件夹 ${folder} 工作区干净，没有需要提交的更改。 <<<${NC}"
             fi
 
+            # gacp 执行成功或失败，但不算跳过
+            gacp_skipped=false
+
             # 返回上一级目录
-            cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
+            cd .. || {
+                echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"
+                return 1
+            }
         fi
     done
 
+    # 分开检查和输出 gpl 和 gacp 的执行情况
     # 检查并输出 gpl 执行失败的文件夹
     if [ ${#gpl_failed_folders[@]} -gt 0 ]; then
         echo -e "${RED}==========================================="
         echo "以下文件夹执行 gpl 失败："
         for folder in "${gpl_failed_folders[@]}"; do
-            echo "- ${folder}"
+            echo -e "- ${folder}"
         done
-        echo "===========================================${NC}"
+        echo -e "===========================================${NC}"
     else
         echo -e "${GREEN}>>> 所有文件夹 gpl 执行成功！ <<<${NC}"
     fi
@@ -569,13 +549,14 @@ function execute_gpl_gacp_and_hhh_in_folders() {
         echo -e "${RED}==========================================="
         echo "以下文件夹执行 gacp 失败："
         for folder in "${gacp_failed_folders[@]}"; do
-            echo "- ${folder}"
+            echo -e "- ${folder}"
         done
-        echo "===========================================${NC}"
-    fi
-
-    # 如果没有失败，则显示 gpl 和 gacp 全部成功
-    if [ ${#gpl_failed_folders[@]} -eq 0 ] && [ ${#gacp_failed_folders[@]} -eq 0 ]; then
-        echo -e "${GREEN}>>> 所有文件夹 gpl 和 gacp 执行成功！ <<<${NC}"
+        echo -e "===========================================${NC}"
+    elif [ "$gacp_executed" = true ]; then
+        # 只有在确实执行了 gacp 时才显示成功信息
+        echo -e "${GREEN}>>> 所有文件夹 gacp 执行成功！ <<<${NC}"
+    elif [ "$gacp_skipped" = true ]; then
+        # 如果所有文件夹都跳过了 gacp，输出跳过信息
+        echo -e "${YELLOW}>>> 所有文件夹的 gacp 都被跳过！ <<<${NC}"
     fi
 }
