@@ -101,6 +101,7 @@ alias gcm=gc
 alias gplall="execute_gpl_and_hhh_in_folders"
 alias gacpall="execute_gpl_gacp_and_hhh_in_folders"
 alias gitall='gr && gacpall'
+alias gall='gitall'
 
 
 # ====简化commit命令====
