@@ -447,6 +447,70 @@ function execute_gpl_and_hhh_in_folders() {
 
 
 
+# function execute_gpl_gacp_and_hhh_in_folders() {
+
+#     # 初始化存储执行失败的文件夹列表
+#     local gpl_failed_folders=()
+#     local gacp_failed_folders=()
+
+#     # 遍历当前目录下的所有子文件夹
+#     for folder in */; do
+#         # 确认是文件夹
+#         if [ -d "$folder" ]; then
+#             # 使用加粗和蓝色显示文件夹名称，使其更加醒目
+#             echo -e "${YELLOW}>>> 进入文件夹：${BOLD}${BLUE}${folder}${NC} <<<"
+#             cd "$folder" || { echo -e "${RED}错误：无法进入文件夹 ${folder}，跳过。${NC}"; gpl_failed_folders+=("${folder}"); gacp_failed_folders+=("${folder}"); continue; }
+
+#             # 执行 gpl 函数
+#             echo -e "${YELLOW}>>> 正在执行 gpl <<<${NC}"
+#             gpl
+#             if [ $? -ne 0 ]; then
+#                 echo -e "${RED}错误：执行 gpl 失败，跳过文件夹 ${folder} 的 gacp 和 hhh 命令。${NC}"
+#                 gpl_failed_folders+=("${folder}")
+#                 cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
+#                 continue  # 由于 gpl 失败，跳过当前文件夹的 gacp 和 hhh 执行
+#             fi
+
+#             # 如果 gpl 成功，继续执行 gacp 命令
+#             echo -e "${YELLOW}>>> 正在执行 gacp <<<${NC}"
+#             gacp
+#             if [ $? -ne 0 ]; then
+#                 echo -e "${RED}错误：执行 gacp 失败，文件夹 ${folder}。执行 hhh。${NC}"
+#                 gacp_failed_folders+=("${folder}")
+#                 hhh  # gacp 失败时才执行 hhh
+#             fi
+
+#             # 返回上一级目录
+#             cd .. || { echo -e "${RED}错误：返回上一级目录失败，终止脚本。${NC}"; return 1; }
+#         fi
+#     done
+
+#     # 检查并输出 gpl 执行失败的文件夹
+#     if [ ${#gpl_failed_folders[@]} -gt 0 ]; then
+#         echo -e "${RED}==========================================="
+#         echo "以下文件夹执行 gpl 失败："
+#         for folder in "${gpl_failed_folders[@]}"; do
+#             echo "- ${folder}"
+#         done
+#         echo "==========================================="
+#         # echo "===========================================${NC}"
+#     else
+#         echo -e "${GREEN}>>> 所有文件夹 gpl 执行成功！ <<<${NC}"
+#     fi
+
+#     # 检查并输出 gacp 执行失败的文件夹
+#     if [ ${#gacp_failed_folders[@]} -gt 0 ]; then
+#         echo -e "${RED}==========================================="
+#         echo "以下文件夹执行 gacp 失败："
+#         for folder in "${gacp_failed_folders[@]}"; do
+#             echo "- ${folder}"
+#         done
+#         echo "===========================================${NC}"
+#     elif [ ${#gpl_failed_folders[@]} -eq 0 ]; then
+#         # 如果所有 gpl 都成功且 gacp 没有失败，显示全部成功
+#         echo -e "${GREEN}>>> 所有文件夹 gpl 和 gacp 执行成功！ <<<${NC}"
+#     fi
+# }
 function execute_gpl_gacp_and_hhh_in_folders() {
 
     # 初始化存储执行失败的文件夹列表
@@ -478,6 +542,9 @@ function execute_gpl_gacp_and_hhh_in_folders() {
                 echo -e "${RED}错误：执行 gacp 失败，文件夹 ${folder}。执行 hhh。${NC}"
                 gacp_failed_folders+=("${folder}")
                 hhh  # gacp 失败时才执行 hhh
+            else
+                # 如果工作区干净，gacp 返回成功，这不应被视为失败
+                echo -e "${GREEN}>>> 文件夹 ${folder} 工作区干净，没有需要提交的更改。 <<<${NC}"
             fi
 
             # 返回上一级目录
@@ -492,8 +559,7 @@ function execute_gpl_gacp_and_hhh_in_folders() {
         for folder in "${gpl_failed_folders[@]}"; do
             echo "- ${folder}"
         done
-        echo "==========================================="
-        # echo "===========================================${NC}"
+        echo "===========================================${NC}"
     else
         echo -e "${GREEN}>>> 所有文件夹 gpl 执行成功！ <<<${NC}"
     fi
@@ -506,8 +572,10 @@ function execute_gpl_gacp_and_hhh_in_folders() {
             echo "- ${folder}"
         done
         echo "===========================================${NC}"
-    elif [ ${#gpl_failed_folders[@]} -eq 0 ]; then
-        # 如果所有 gpl 都成功且 gacp 没有失败，显示全部成功
+    fi
+
+    # 如果没有失败，则显示 gpl 和 gacp 全部成功
+    if [ ${#gpl_failed_folders[@]} -eq 0 ] && [ ${#gacp_failed_folders[@]} -eq 0 ]; then
         echo -e "${GREEN}>>> 所有文件夹 gpl 和 gacp 执行成功！ <<<${NC}"
     fi
 }
