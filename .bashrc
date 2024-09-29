@@ -492,7 +492,8 @@ function execute_gpl_gacp_and_hhh_in_folders() {
         for folder in "${gpl_failed_folders[@]}"; do
             echo "- ${folder}"
         done
-        echo "===========================================${NC}"
+        echo "==========================================="
+        # echo "===========================================${NC}"
     else
         echo -e "${GREEN}>>> 所有文件夹 gpl 执行成功！ <<<${NC}"
     fi
