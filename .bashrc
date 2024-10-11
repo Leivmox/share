@@ -98,10 +98,10 @@ alias gaa='git add .'
 alias gpl='git pull'
 alias gph="git push"
 alias gcm=gc
-alias gplall="execute_gpl_and_hhh_in_folders"
-alias gacpall="execute_gpl_gacp_and_hhh_in_folders"
-alias gitall='gr && gacpall'
-alias gall='gitall'
+alias gplall="gr && execute_gpl_and_hhh_in_folders"
+alias gacpall="gr && execute_gpl_gacp_and_hhh_in_folders"
+alias gitall='gacpall'
+alias gall='gacpall'
 
 
 # ====简化commit命令====
