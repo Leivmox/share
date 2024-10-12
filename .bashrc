@@ -105,25 +105,24 @@ alias gall='gacpall'
 
 
 # ====简化commit命令====
-# function gc() {
-#     # 检查是否提供了提交信息
-#     if [ -z "$1" ]; then
-#         echo "错误：提交信息是必需的，请提供提交信息。"
-#         return 1
-#     fi
+function gc() {
+    # 检查是否提供了提交信息
+    if [ -z "$1" ]; then
+        echo "错误：提交信息是必需的，请提供提交信息。"
+        return 1
+    fi
 
-#     # 调用检查函数
-#     check_git_repo || return 1
+    # 调用检查函数
+    check_git_repo || return 1
 
-#     # 尝试提交更改
-#     git commit -m "$1" || {
-#         echo "错误：提交失败，请检查是否有需要提交的更改。"
-#         return 1
-#     }
+    # 尝试提交更改
+    git commit -m "$1" || {
+        echo "错误：提交失败，请检查是否有需要提交的更改。"
+        return 1
+    }
 
-#     echo ">>> 提交成功：$1 <<<"
-# }
-alias gc="git commit -m"
+    echo ">>> 提交成功：$1 <<<"
+}
 
 # ====一键推送====
 function gacp() {
