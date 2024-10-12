@@ -56,28 +56,28 @@ NC='\033[0m'        # 无颜色，重置颜色
 #====gcc:创建out文件夹并将输出文件输出至out====
 gcco() {
     # 检查是否提供了源文件名参数
-    # if [ -z "$1" ]; then
-    #     echo "错误：未输入源文件！请提供一个 C 源文件作为参数。"
-    #     return 1
-    # fi
+    if [ -z "$1" ]; then
+        echo "错误：未输入源文件！请提供一个 C 源文件作为参数。"
+        return 1
+    fi
 
     # # 检查 gcc 是否已安装
-    # if ! command -v gcc &>/dev/null; then
-    #     echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
-    #     return 1
-    # fi
+    if ! command -v gcc &>/dev/null; then
+        echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
+        return 1
+    fi
 
     # # 检查源文件是否存在
-    # if [ ! -f "$1" ]; then
-    #     echo "错误：源文件 '$1' 不存在或不可访问，请检查文件路径。"
-    #     return 1
-    # fi
+    if [ ! -f "$1" ]; then
+        echo "错误：源文件 '$1' 不存在或不可访问，请检查文件路径。"
+        return 1
+    fi
 
     # 创建输出目录
-    # mkdir -p out || {
-    #     echo "错误：无法创建输出目录 'out'。"
-    #     return 1
-    # }
+    mkdir -p out || {
+        echo "错误：无法创建输出目录 'out'。"
+        return 1
+    }
 
     # 编译源文件
     command gcc "$1" -o out/"${1%.*}" || {
