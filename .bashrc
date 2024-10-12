@@ -56,32 +56,32 @@ NC='\033[0m'        # 无颜色，重置颜色
 #====gcc:创建out文件夹并将输出文件输出至out====
 gcco() {
     # 检查是否提供了源文件名参数
-    if [ -z "$1" ]; then
-        echo "错误：未输入源文件！请提供一个 C 源文件作为参数。"
-        return 1
-    fi
+    # if [ -z "$1" ]; then
+    #     echo "错误：未输入源文件！请提供一个 C 源文件作为参数。"
+    #     return 1
+    # fi
 
-    # 检查 gcc 是否已安装
-    if ! command -v gcc &>/dev/null; then
-        echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
-        return 1
-    fi
+    # # 检查 gcc 是否已安装
+    # if ! command -v gcc &>/dev/null; then
+    #     echo "错误：gcc 编译器未安装或不可用，请先安装 gcc。"
+    #     return 1
+    # fi
 
-    # 检查源文件是否存在
-    if [ ! -f "$1" ]; then
-        echo "错误：源文件 '$1' 不存在或不可访问，请检查文件路径。"
-        return 1
-    fi
+    # # 检查源文件是否存在
+    # if [ ! -f "$1" ]; then
+    #     echo "错误：源文件 '$1' 不存在或不可访问，请检查文件路径。"
+    #     return 1
+    # fi
 
     # 创建输出目录
-    mkdir -p out || {
-        echo "错误：无法创建输出目录 'out'。"
-        return 1
-    }
+    # mkdir -p out || {
+    #     echo "错误：无法创建输出目录 'out'。"
+    #     return 1
+    # }
 
     # 编译源文件
     command gcc "$1" -o out/"${1%.*}" || {
-        echo "错误：编译失败，请检查源代码。"
+        # echo "错误：编译失败，请检查源代码。"
         return 1
     }
 
@@ -105,24 +105,25 @@ alias gall='gacpall'
 
 
 # ====简化commit命令====
-function gc() {
-    # 检查是否提供了提交信息
-    if [ -z "$1" ]; then
-        echo "错误：提交信息是必需的，请提供提交信息。"
-        return 1
-    fi
+# function gc() {
+#     # 检查是否提供了提交信息
+#     if [ -z "$1" ]; then
+#         echo "错误：提交信息是必需的，请提供提交信息。"
+#         return 1
+#     fi
 
-    # 调用检查函数
-    check_git_repo || return 1
+#     # 调用检查函数
+#     check_git_repo || return 1
 
-    # 尝试提交更改
-    git commit -m "$1" || {
-        echo "错误：提交失败，请检查是否有需要提交的更改。"
-        return 1
-    }
+#     # 尝试提交更改
+#     git commit -m "$1" || {
+#         echo "错误：提交失败，请检查是否有需要提交的更改。"
+#         return 1
+#     }
 
-    echo ">>> 提交成功：$1 <<<"
-}
+#     echo ">>> 提交成功：$1 <<<"
+# }
+alias gc="git commit -m"
 
 # ====一键推送====
 function gacp() {
