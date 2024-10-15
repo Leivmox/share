@@ -258,9 +258,7 @@ function apush() {
         return 1
     fi
 
-    echo -e "${BLUE}===========================================${NC}"
-    echo -e "${YELLOW}   当前分支：${GREEN}${current_branch}${YELLOW}   ${NC}"
-    echo -e "${BLUE}===========================================${NC}"
+    echo -e "${YELLOW}>>> 正在执行 apush 当前分支：${GREEN}${current_branch}${YELLOW} <<<${NC}"
 
     # 初始化状态变量
     local gitee_status=0
