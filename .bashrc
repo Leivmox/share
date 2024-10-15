@@ -202,7 +202,7 @@ function gacp() {
     }
 
     # 成功提示
-    echo -e "${GREEN}>>> 代码已成功提交并推送到远程仓库！ <<<${NC}"
+    # echo -e "${GREEN}>>> 代码已成功提交并推送到远程仓库！ <<<${NC}"
 }
 
 
@@ -563,9 +563,9 @@ function execute_gpl_gacp_and_hhh_in_folders() {
                 echo -e "${RED}错误：执行 gacp 失败，文件夹 ${folder}。执行 hhh。${NC}"
                 gacp_failed_folders+=("${folder}")
                 hhh # gacp 失败时才执行 hhh
-            else
+            # else
                 # 如果工作区干净，gacp 返回成功，这不应被视为失败
-                echo -e "${GREEN}>>> 文件夹 ${folder} 工作区干净，没有需要提交的更改。 <<<${NC}"
+                # echo -e "${GREEN}>>> 文件夹 ${folder} 工作区干净，没有需要提交的更改。 <<<${NC}"
             fi
 
             # gacp 执行成功或失败，但不算跳过
