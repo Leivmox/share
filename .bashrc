@@ -137,8 +137,6 @@ cppo() {
     }
 }
 
-
-
 # ======================================
 # ========🚀🚀🚀 Git 🚀🚀🚀==========
 # ======================================
@@ -152,7 +150,6 @@ alias gplall="gr && execute_gpl_and_hhh_in_folders"
 alias gacpall="gr && execute_gpl_gacp_and_hhh_in_folders"
 alias gitall='gacpall'
 alias gall='gacpall'
-
 
 # ====简化commit命令====
 function gc() {
@@ -380,7 +377,6 @@ function check_git_repo() {
     fi
     return 0
 }
-
 
 function hhh() {
 
