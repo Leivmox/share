@@ -187,16 +187,15 @@ function gacp() {
     if git diff-index --quiet HEAD --; then
         # 工作区干净，没有需要提交的更改
         echo -e "${GREEN}工作区干净，没有需要提交的更改。${NC}"
-        return 0
+    else
+        # 提交所有更改，使用默认提交信息 "更新"
+        git commit -m "update" || {
+            echo -e "${RED}错误：提交更改失败，请检查是否有需要提交的更改。${NC}"
+            return 1
+        }
     fi
 
-    # 尝试提交更改，使用默认提交信息 "更新"
-    git commit -m "update" || {
-        echo -e "${RED}错误：提交更改失败，请检查是否有需要提交的更改。${NC}"
-        return 1
-    }
-
-    # 尝试推送到远程仓库
+    # 无论工作区是否有更改，尝试推送到远程仓库
     apush || {
         echo -e "${RED}错误：推送代码到远程仓库失败。${NC}"
         return 1
@@ -205,6 +204,7 @@ function gacp() {
     # 成功提示
     echo -e "${GREEN}>>> 代码已成功提交并推送到远程仓库！ <<<${NC}"
 }
+
 
 # ====切换仓库====
 function gitee() {
