@@ -1,84 +1,33 @@
-**mybetis**
+# Share Configuration Repository 😊
 
-```
-@Mapper
-public interface ConmendHapper {
+This repository, named "share", is specifically designed to house configuration files for various tools and environments. It serves as a central location for my .bashrc, .zshrc, vimrc, ideavimrc, and other configuration files. The inspiration for creating this repository came from the shared folders in virtual machines.
 
-    @Select("select *from t_comment where a_id=f{aid}")
-    public List<Comnent> findById(Integer aId);
-    @Insert("INSERT INTo t_comment(id,content,author,a_id)"+"values(#{id},#{content},#fauthor},#{aId})")
-public Conment insertComment(Conment comnent);}
-```
+## Purpose 🎯
 
-```
-@Component
-@Data
-@Entity(name = "t_comment")
-public class Comment {
-    @Id
-    @GeneratedValve(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name ="content")
-    private String content;
-    @Column(name = "author")
-    private String author;
-    @Column(name = "a_id")private Integer ald;}
-```
+As someone who uses multiple computers, maintaining consistent configurations across different machines is crucial. This repository allows me to use Git to effectively sync and version control my configurations.
 
-```
-public class UserController {
-    @Autowired
-    ConmendMapper conmendHapper;
-    RRequestHapping("/comment.html")
-    public String getcomment(Integer aId, Model model) {
-        ListcConment> comnentList;
-        commendapper.findById(ald);
-        model,addAttribute( attributeName:"commentlist", commentList);return "conment";
-        @ReqvestMapping("/success.html")}
-    
-        public String insertcomment(comment comment,@RequestParan(value = "ald",required = false)Integer aId) {
-            commendHapper, insertconment(comment);
-            return "redirect:conment.html2aId=" + aId;
-        }
-}
-```
+## Included Configurations 📁
 
-**JPA**
+- **.bashrc:** Configuration for the Bash shell.
+- **.zshrc:** Configuration for the Zsh shell.
+- **vimrc:** Configuration for the Vim text editor.
+- **ideavimrc:** Configuration for the IdeaVim plugin in IntelliJ IDEA.
 
-```
-@Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+## How to Use 🚀
 
-    @Query(value: "select * from t_comment where a_id=?1",nativeQuery=true)
-    public List<Comment>findCommentByAId(Integer aid);}
-```
+Feel free to explore and use these configurations. If you find them useful, you can clone the repository with the following command:
 
+```bash
+git clone git@github.com:Leivzy/share.git
 ```
-@Service
-@Component
-public class AcService {
+After cloning, you can copy the configuration files or create symbolic links in your home directory or corresponding application configurations.
 
-    @Autowired 
-    private CommentRepositorycommentRepository;
-    public List<Comment> getAllComment(Integer aid)
-    {List<Comment> list=commentRepository.findCommentByAId(aid);
-        return list;}
-```
+##Contribution🤝
 
-```
-@RequestMapping("/comment.html")
-public String getcomment(Integer aid,Model model)
-        {List<Comment> commentList=acService.getAllComment(aid);
-            model.addAttribute( attributeName: "commentlist",commentList),
-        return "comment";
-        }
-```
+If you have suggestions, improvements, or other useful configurations, contributions are welcome. Simply fork the repository, make your changes, and submit a pull request.
 
-```
-RequestMapping("/success.html")
-public String insertComment(comment comment,@RequestParam(value = "aId",required = false)
-Intege( aid)fcommentRepository.save(connent);
-        return "redirect:connent.html2aid:"+a1d;}
-```
+##Feedback📬
 
+If you encounter any issues or have questions, please create an issue. Thank you for your feedback!
+
+Happy coding!👨‍💻👩‍💻
