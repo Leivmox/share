@@ -605,7 +605,7 @@ function execute_gpl_gacp_and_hhh_in_folders() {
         # 只有在确实执行了 gacp 时才显示成功信息
         echo -e "${GREEN}>>> 所有文件夹 gacp 执行成功！ <<<${NC}"
         echo -e "
-${PURPLE}
+${BLUE}
 ⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣣⠄⡀⢬⣭⣻⣷⡌⢿⣿⣿
 ⡀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠈⣆⢹⣿⣿⣿⡈⢿⣿
 ⡇⠄⢛⣛⣻⣿⣿⣿⣿⣿⣿⣿⣿⡆⠹⣿⣆⠸⣆⠙⠛⠛⠃⠘⣿
