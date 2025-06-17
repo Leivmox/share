@@ -1,4 +1,4 @@
-### **请自己设计表**
+# **请自己设计表**
 
 下面是示例
 
@@ -224,15 +224,19 @@ STORED AS TEXTFILE;
 
 ### 第三步：上传 CSV 文件到 HDFS
 
-> 假设你的文件在虚拟机的 `/home/hadoop/data/` 目录，文件名如 `courses.csv`。
+> 假设你的文件在虚拟机的当前目录，文件名如 `courses.csv`。
+
+# 下面的命令仅在四个.csv文件在当前目录下打开的终端时有效
+
+其他位置请自己更改文件位置的输入方式
 
 #### 1. 把本地文件上传到 HDFS：
 
-注:student_scores为数据库名字,得和之前的保持一致
+注:student_scores尽量和数据库名的保持一致
 
 ```
 hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/courses
-hdfs dfs -put (你的表文件位置)courses.csv /user/hive/warehouse/student_scores/courses/
+hdfs dfs -put courses.csv /user/hive/warehouse/student_scores/courses/
 
 ```
 
@@ -240,16 +244,28 @@ hdfs dfs -put (你的表文件位置)courses.csv /user/hive/warehouse/student_sc
 
 ```
 hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/grades
-hdfs dfs -put (你的表文件位置)grade.csv /user/hive/warehouse/student_scores/grades/
+hdfs dfs -put grade.csv /user/hive/warehouse/student_scores/grades/
 
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/courses
-hdfs dfs -put (你的表文件位置)students.csv /user/hive/warehouse/student_scores/students/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/students
+hdfs dfs -put students.csv /user/hive/warehouse/student_scores/students/
 
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/courses
-hdfs dfs -put (你的表文件位置)enrollments.csv /user/hive/warehouse/student_scores/enrollments/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/enrollments
+hdfs dfs -put enrollments.csv /user/hive/warehouse/student_scores/enrollments/
 ```
 
 
+
+### 🔹额外: 确保文件已上传到 HDFS
+
+请在你的虚拟机 Linux 终端运行以下命令，确认文件存在：
+以grades举例:
+
+```
+hdfs dfs -ls /user/hive/warehouse/student_scores/grades/
+
+```
+
+如果你看到 `grades.csv` 文件在里面，说明文件存在。
 
 ------
 
@@ -262,8 +278,6 @@ LOAD DATA INPATH '/user/hive/warehouse/student_scores/courses/courses.csv'
 INTO TABLE courses;
 
 ```
-
-
 
 对其他表也按此格式执行：
 
@@ -279,48 +293,18 @@ INTO TABLE grades;
 
 ```
 
-## ✅ 验证数据是否成功导入
+### 🔹额外:  验证数据是否成功导入
 
 你可以执行以下语句查看数据：
+
+以students举例:
 
 ```
 SELECT * FROM courses LIMIT 10;
 SELECT COUNT(*) FROM students;
-
-```
-
-## ✅ 正确操作流程（确保 CSV 文件上传到 HDFS 正确目录）
-
-你需要：
-
-------
-
-### 🔹 第一步：确保文件已上传到 HDFS
-
-请在你的虚拟机 Linux 终端运行以下命令，确认文件存在：
-
-```
-hdfs dfs -ls /user/hive/warehouse/student_scores/grades/
-
 ```
 
 
-
-如果你看到 `grades.csv` 文件在里面，说明文件存在。
-
-> 
-
-
-
-### 🔹 第四步：回到 Hive 执行导入命令
-
-```
-USE student_scores;
-
-LOAD DATA INPATH '/user/hive/warehouse/student_scores/grades/grades.csv'
-INTO TABLE grades;
-
-```
 
 
 
