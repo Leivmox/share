@@ -2,7 +2,7 @@
 
 需要：
 
- **自己编一些数据**（比如学生叫张三、李四，成绩是85、90…）
+**自己编一些数据**（比如学生叫张三、李四，成绩是85、90…）
 
 **故意制造点“错误数据”**，比如有重复的、缺成绩的、拼写错的，等等（这些后面要清洗）
 
@@ -14,13 +14,13 @@
 
 | student_id | student_name | student_gender | major            |
 | ---------- | ------------ | -------------- | ---------------- |
-| S001       | 张伟         | 男             | 计算机科学与应用 |
-| S002       | 李@娜        | 女             | 软件工程         |
-| S003       | 王磊         | NULL           | 网络工程         |
-| S004       | 赵敏         | 女             | 物联网           |
-| S005       | 张伟         | 男             | 计算机科学与应用 |
-| S006       | 刘强东       | 男             | 网络工程         |
-| S007       | 王一博       | 女             | 物联网           |
+| S001       | 张三         | 男             | 计算机科学与应用 |
+| S002       | 王磊         | 女             | 软件工程         |
+| S003       | 麻子         | 女             | 网络工程         |
+| S004       | 李四         | 女             | 物联网           |
+| S005       | 大张伟       | 男             | 物联网           |
+| S006       | 陈睿         | 男             | 网络工程         |
+| S007       | 王一博       | NULL           | 物联网           |
 
 🔍 **脏数据说明**：
 
@@ -36,9 +36,9 @@
 | --------- | -------------- | ----------- | ------------- |
 | C001      | 软件项目管理   | 必修        | 3             |
 | C002      | 人工智能导论   | 选修        | 2             |
-| C003      | 大数据技术基础 | 必修        | 3             |
+| C003      | 大数据技术基础 | 选修        | 3             |
 | C004      | 系统分析与设计 | xuanxiu     | 2             |
-| C005      | 数据结构与算法 | 必修        | 3             |
+| C005      | 形势与政策     | 必修        | 3             |
 
 🔍 **脏数据说明**：
 
@@ -77,18 +77,18 @@
 
 | grade_id | enrollment_id | grade |
 | -------- | ------------- | ----- |
-| G001     | E001          | 88    |
-| G002     | E002          | 95    |
+| G001     | E001          | 92    |
+| G002     | E002          | 85    |
 | G003     | E003          | 108   |
 | G004     | E004          | 0     |
 | G005     | E005          |       |
 | G006     | E006          | 76    |
-| G007     | E007          | 83    |
+| G007     | E007          | 66    |
 | G008     | E008          | 90    |
-| G009     | E009          | 67    |
+| G009     | E009          | 16    |
 | G010     | E010          | 79    |
 | G011     | E011          | 81    |
-| G012     | E012          | 88    |
+| G012     | E012          | 76    |
 
 ### 📂 附加说明：
 
@@ -238,25 +238,25 @@ STORED AS TEXTFILE;
 
 #### 1. 把本地文件上传到 HDFS：
 
-注:student_scores尽量和数据库名的保持一致
+注:student_db尽量和数据库名的保持一致
 
 ```
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/courses
-hdfs dfs -put courses.csv /user/hive/warehouse/student_scores/courses/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_db/courses
+hdfs dfs -put courses.csv /user/hive/warehouse/student_db/courses/
 
 ```
 
 （注意其他表也要建文件夹并上传对应 CSV）
 
 ```
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/grades
-hdfs dfs -put grade.csv /user/hive/warehouse/student_scores/grades/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_db/grades
+hdfs dfs -put grade.csv /user/hive/warehouse/student_db/grades/
 
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/students
-hdfs dfs -put students.csv /user/hive/warehouse/student_scores/students/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_db/students
+hdfs dfs -put students.csv /user/hive/warehouse/student_db/students/
 
-hdfs dfs -mkdir -p /user/hive/warehouse/student_scores/enrollments
-hdfs dfs -put enrollments.csv /user/hive/warehouse/student_scores/enrollments/
+hdfs dfs -mkdir -p /user/hive/warehouse/student_db/enrollments
+hdfs dfs -put enrollments.csv /user/hive/warehouse/student_db/enrollments/
 ```
 
 
@@ -267,7 +267,7 @@ hdfs dfs -put enrollments.csv /user/hive/warehouse/student_scores/enrollments/
 以grades举例:
 
 ```
-hdfs dfs -ls /user/hive/warehouse/student_scores/grades/
+hdfs dfs -ls /user/hive/warehouse/student_db/grades/
 
 ```
 
@@ -280,7 +280,7 @@ hdfs dfs -ls /user/hive/warehouse/student_scores/grades/
 > 前面你已创建好表，现在让 Hive 读取 HDFS 上的数据
 
 ```
-LOAD DATA INPATH '/user/hive/warehouse/student_scores/courses/courses.csv'
+LOAD DATA INPATH '/user/hive/warehouse/student_db/courses/courses.csv'
 INTO TABLE courses;
 
 ```
@@ -288,13 +288,13 @@ INTO TABLE courses;
 对其他表也按此格式执行：
 
 ```
-LOAD DATA INPATH '/user/hive/warehouse/student_scores/students/students.csv'
+LOAD DATA INPATH '/user/hive/warehouse/student_db/students/students.csv'
 INTO TABLE students;
 
-LOAD DATA INPATH '/user/hive/warehouse/student_scores/enrollments/enrollments.csv'
+LOAD DATA INPATH '/user/hive/warehouse/student_db/enrollments/enrollments.csv'
 INTO TABLE enrollments;
 
-LOAD DATA INPATH '/user/hive/warehouse/student_scores/grades/grades.csv'
+LOAD DATA INPATH '/user/hive/warehouse/student_db/grades/grades.csv'
 INTO TABLE grades;
 
 ```
