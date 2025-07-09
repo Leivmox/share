@@ -45,6 +45,7 @@ alias vimbash='vim ~/.bashrc' # 使用 Vim 编辑 bash 的配置文件 ~/.bashrc
 alias vimrc='vim ~/.vimrc' # 使用 Vim 编辑 Vim 的配置文件 ~/.vimrc
 
 alias :q='exit' #退出
+alias :wq='exit' #退出
 
 # 颜色定义（全局变量）
 
