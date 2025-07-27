@@ -338,7 +338,21 @@ function gr() {
     local repo_short_name=$1
 
     # 使用简写名称获取实际的仓库名（检查传入参数是否为定义的变量）
-    local repo_name=${!repo_short_name}
+    # local repo_name=${!repo_short_name}
+   # local repo_name=${(P)repo_short_name}
+    # 检测当前是 Zsh 还是 Bash，并使用对应的语法
+    if [ -n "$ZSH_VERSION" ]; then
+        # 当前是 Zsh 环境
+        repo_name=${(P)repo_short_name}
+    elif [ -n "$BASH_VERSION" ]; then
+        # 当前是 Bash 环境
+        repo_name=${!repo_short_name}
+    else
+        # 兜底处理，适用于其他 shell 或未知情况
+        echo "错误：不支持的 Shell，无法执行间接变量引用。" >&2
+        return 1
+    fi
+
 
     # 如果参数没有定义，直接进入 git_lib 下与传入参数同名的文件夹
     if [ -z "$repo_name" ]; then
@@ -451,7 +465,12 @@ function hhh() {
     # 显示系统信息
     echo -e "${YELLOW}>>> 系统信息：${NC}"
     echo -e "${GREEN}操作系统：$(uname -o) $(uname -r)${NC}"
-    echo -e "${GREEN}Shell 版本：$BASH_VERSION${NC}"
+    # echo -e "${GREEN}Shell 版本：$BASH_VERSION${NC}"
+    if [ -n "$ZSH_VERSION" ]; then
+        echo -e "${GREEN}Shell 版本：Zsh $ZSH_VERSION${NC}"
+    elif [ -n "$BASH_VERSION" ]; then
+        echo -e "${GREEN}Shell 版本：Bash $BASH_VERSION${NC}"
+    fi
 
     echo ""
 
