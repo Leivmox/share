@@ -1,0 +1,86 @@
+#!/bin/bash
+# ===================================================================
+#                PROXY TOGGLE SCRIPT (Cross-Platform)
+# ===================================================================
+#
+# 提供三个命令:
+#   vpn         - 开启代理并自动运行 gtest
+#   vpn off     - 关闭代理
+#   gtest       - (推荐) 像 git/pip 一样, 直接测试当前环境的联网状态
+#   proxyhealth - (高级) 深度诊断代理服务器本身是否健康
+
+# ======================================
+# ======== ⚙️ 代理配置 (请修改) ⚙️ ========
+# ======================================
+# --- Clash 用户示例 (混合端口) ---
+export PROXY_HTTP_PORT="7890"
+export PROXY_SOCKS5_PORT="7890"
+
+# --- V2RayN 用户示例 (分离端口) ---
+# export PROXY_HTTP_PORT="10809" 
+# export PROXY_SOCKS5_PORT="10808"
+
+# ======================================
+# ======== 🌐 代理控制函数 🌐 ========
+# ======================================
+
+# --- 函数 1：gtest (Google 连通性黑盒测试) ---
+# 用途：像 git/pip 一样, 直接测试当前环境能否连接 Google。
+# 它会自动使用 http_proxy 环境变量 (如果存在)。
+function ggtest() {
+    echo -e "\n${YELLOW}正在测试到 Google.com 的连通性 (基于当前环境)...${NC}"
+    
+    # 这个 curl 命令不带任何 -x 参数。
+    # 它会完全模仿 git/pip 的行为, 自动使用 $http_proxy (如果存在)。
+    curl -s -o /dev/null --connect-timeout 5 -k https://www.google.com/generate_204
+
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}      ✓ 连接成功！${NC}"
+    else
+        echo -e "${RED}      ✗ 连接失败。${NC}"
+    fi
+}
+
+
+# --- 函数 2：vpn (开启/关闭代理) ---
+# 它会在开启代理后，自动调用 gtest 进行验证。
+alias vpnoff='vpn off'
+function vpn() {
+    if [[ "$1" == "off" || "$1" == "unset" ]]; then
+        unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY
+        echo -e "\033[0;31m>>> 代理已关闭 <<<\033[0m"
+    else
+        local http_addr="http://127.0.0.1:${PROXY_HTTP_PORT}"
+        local socks5_addr="socks5://127.0.0.1:${PROXY_SOCKS5_PORT}"
+        
+        export http_proxy="$http_addr"
+        export https_proxy="$http_addr"
+        export all_proxy="$socks5_addr"
+        export HTTP_PROXY=$http_proxy
+        export HTTPS_PROXY=$https_proxy
+        export ALL_PROXY=$all_proxy
+        
+        echo -e "\033[0;32m>>> 代理已开启 <<<\033[0m"
+        echo "    HTTP Proxy  : $http_proxy"
+        echo "    SOCKS Proxy  : $all_proxy"
+        
+        # 开启代理后，进行一次简单直接的 gtest 验证
+        ggtest
+    fi
+}
+
+
+# --- 函数 3：proxyhealth (代理服务器健康检查 - 高级) ---
+# 用途：深度诊断代理服务器本身, 忽略当前环境变量。
+function vpntest() {
+    echo -e "\n${YELLOW}正在进行代理服务器健康检查...${NC}"
+    # ... (此函数内容保持不变, 作为高级诊断工具)
+    local all_ok=true
+    echo -e "  → 正在测试 HTTP 代理端口 (${PROXY_HTTP_PORT})..."
+    curl -s -o /dev/null --connect-timeout 5 -k -x "http://127.0.0.1:${PROXY_HTTP_PORT}" http://www.google.com/generate_204
+    if [ $? -eq 0 ]; then echo -e "${GREEN}      ✓ HTTP 端口连接成功！${NC}"; else echo -e "${RED}      ✗ HTTP 端口连接失败！${NC}"; all_ok=false; fi
+    echo -e "  → 正在测试 SOCKS5 代理端口 (${PROXY_SOCKS5_PORT})..."
+    curl -s -o /dev/null --connect-timeout 5 -k -x "socks5h://127.0.0.1:${PROXY_SOCKS5_PORT}" https://www.google.com/generate_204
+    if [ $? -eq 0 ]; then echo -e "${GREEN}      ✓ SOCKS5 端口连接成功！${NC}"; else echo -e "${RED}      ✗ SOCKS5 端口连接失败！${NC}"; all_ok=false; fi
+    if [ "$all_ok" = true ]; then echo -e "\n${GREEN}>>> 所有代理端口均工作正常！ <<<\033[0m"; else echo -e "\n${RED}>>> 部分代理端口无响应，请检查您的代理软件配置。 <<<\033[0m"; fi
+}
