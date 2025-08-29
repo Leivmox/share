@@ -1,9 +1,9 @@
 # ===================================================================
-#                😄😄😄 Bash Configuration 😄😄😄                  =
+#                😄😄😄 Zsh Configuration 😄😄😄                 =
 # ===================================================================
 #
 #  说明:
-#  这是一个专为 Bash 环境优化的配置文件。
+#  这是一个专为 Zsh 环境优化的配置文件。
 #  请根据您自己的需求，修改下面的 "基础配置" 部分。
 #
 
@@ -11,10 +11,12 @@
 # ======== ⚙️ 基础配置 (请修改) ⚙️ ========
 # ======================================
 # 1. 配置你存放所有 Git 仓库的根文件夹路径
-# 例如: export git_lib="/c/Users/your_name/repositories"
+# 例如: export git_lib="/Users/your_name/repositories"
+export git_lib="/path/to/your/git_lib"
 
 # 2. 配置你的 Git 用户名 (用于拼接 GitHub/Gitee 的远程地址)
 # 例如: export username="Leivmox"
+export username="YourGitUsername"
 
 # 3. (可选) 配置一些常用 Git 仓库的简写, 方便使用 gr 命令快速跳转
 # 格式: export 简写="仓库文件夹名"
@@ -93,8 +95,8 @@ alias gaa='git add .'
 alias gpl='git pull'
 alias gph="git push"
 alias gcm='gc' # gc 是下面的函数
-alias gplall="gr && execute_gpl_and_ginfo_in_folders"
-alias gacpall="gr && execute_gpl_gacp_in_folders" # <-- 已更新
+alias gplall="gr && execute_gpl_and_ginfo_in_folders" # <-- 已更新
+alias gacpall="gr && execute_gpl_gacp_and_hhh_in_folders"
 alias gitall='gacpall'
 alias gall='gacpall'
 
@@ -184,11 +186,11 @@ function apush() {
     fi
 
     # 最终结果报告
-    if [ $gitee_status -eq 1 ] && [ $github_status -eq 1 ]; then
+    if (( gitee_status && github_status )); then
         echo -e "\n${RED}>>> Gitee 和 GitHub 推送均失败! <<<${NC}"; return 1
-    elif [ $gitee_status -eq 1 ]; then
+    elif (( gitee_status )); then
         echo -e "\n${YELLOW}>>> Gitee 推送失败, 但 GitHub 推送成功! <<<${NC}"
-    elif [ $github_status -eq 1 ]; then
+    elif (( github_status )); then
         echo -e "\n${YELLOW}>>> GitHub 推送失败, 但 Gitee 推送成功! <<<${NC}"
     else
         echo -e "\n${GREEN}>>> 已成功推送到 Gitee 和 GitHub! <<<${NC}"
@@ -220,7 +222,7 @@ function github() {
 # gr my-repo -> 进入 git_lib/my-repo 目录 (如果未配置简写)
 function gr() {
     # 如果没有参数, 直接进入 git_lib 根目录
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         cd "$git_lib" || {
             echo -e "${RED}错误: 无法访问目录 ${git_lib}。${NC}"; return 1
         }
@@ -229,11 +231,11 @@ function gr() {
     fi
 
     local repo_short_name=$1
-    # BASH-NATIVE: 使用 Bash 的 ${!} 语法进行间接变量引用
-    local repo_name=${!repo_short_name}
+    # ZSH-NATIVE: 使用 Zsh 的 (P) 标志进行间接变量引用
+    local repo_name=${(P)repo_short_name}
 
     # 如果简写未定义, 则将参数本身作为目标文件夹名
-    if [ -z "$repo_name" ]; then
+    if [[ -z "$repo_name" ]]; then
         repo_name=$repo_short_name
     fi
 
@@ -250,7 +252,7 @@ function gr() {
 }
 
 # --- 显示当前仓库的详细状态信息 (Git Info) ---
-function ginfo() {
+function ginfo() { # <-- 已重命名
     check_git_repo || return 0 # 即使不是git仓库也继续执行，只是部分信息会报错
     local folder_name=$(basename "$(pwd)")
 
@@ -262,10 +264,10 @@ function ginfo() {
     echo -e "${YELLOW}>>> 最后提交: ${NC}${GREEN}$(git log -1 --pretty=format:'%h | %an | %s' 2>/dev/null || echo '-')${NC}"
     echo -e "${YELLOW}>>> 用户配置: ${NC}"
     git config --list --show-origin | grep -E 'user.name|user.email' || echo -e "${RED}无法获取 Git 用户配置。${NC}"
-    echo -e "${YELLOW}>>> 系统信息: ${NC}${GREEN}OS: $(uname -o) $(uname -r) | Shell: Bash $BASH_VERSION${NC}" # <-- BASH
+    echo -e "${YELLOW}>>> 系统信息: ${NC}${GREEN}OS: $(uname -o) $(uname -r) | Shell: Zsh $ZSH_VERSION${NC}"
     echo -e "${YELLOW}>>> 环境变量 'username': ${NC}${GREEN}${username:-'未定义'}${NC}"
     echo -e "${YELLOW}>>> 仓库状态: ${NC}"
-    if [ -n "$(git status -s)" ]; then
+    if [[ -n "$(git status -s)" ]]; then
         echo -e "${RED}有未提交的更改:${NC}"
         git status -s
     else
@@ -280,27 +282,25 @@ function ginfo() {
 # ======================================
 
 # --- 批量在所有子目录执行 git pull 和 ginfo ---
-function execute_gpl_and_ginfo_in_folders() {
+function execute_gpl_and_ginfo_in_folders() { # <-- 已重命名
     local failed_folders=()
     for folder in */; do
-        if [ -d "$folder" ]; then
+        if [[ -d "$folder" ]]; then
             echo -e "\n${YELLOW}>>> 进入: ${BOLD}${BLUE}${folder}${NC} <<<"
             (
                 cd "$folder" && \
                 echo -e "${YELLOW}--- 正在执行 gpl ---${NC}" && \
                 gpl && \
                 echo -e "${YELLOW}--- 正在执行 ginfo ---${NC}" && \
-                ginfo
+                ginfo # <-- 已更新
             ) || failed_folders+=("$folder")
         fi
     done
 
-    if [ ${#failed_folders[@]} -gt 0 ]; then
+    if [[ ${#failed_folders[@]} -gt 0 ]]; then
         echo -e "\n${RED}==========================================="
         echo "以下目录执行 gpl 失败:"
-        for folder in "${failed_folders[@]}"; do
-            echo "- $folder"
-        done
+        printf " - %s\n" "${failed_folders[@]}"
         echo -e "===========================================${NC}"
     else
         echo -e "\n${GREEN}>>> 所有目录 gpl 执行成功! <<<${NC}"
@@ -308,12 +308,12 @@ function execute_gpl_and_ginfo_in_folders() {
 }
 
 # --- 批量在所有子目录执行 git pull, gacp ---
-function execute_gpl_gacp_in_folders() { # <-- 已重命名
+function execute_gpl_gacp_and_hhh_in_folders() {
     local gpl_failed=()
     local gacp_failed=()
 
     for folder in */; do
-        if [ -d "$folder" ]; then
+        if [[ -d "$folder" ]]; then
             echo -e "\n${YELLOW}>>> 进入: ${BOLD}${BLUE}${folder}${NC} <<<"
             cd "$folder" || {
                 gpl_failed+=("$folder")
@@ -331,26 +331,16 @@ function execute_gpl_gacp_in_folders() { # <-- 已重命名
             echo -e "${YELLOW}--- 正在执行 gacp ---${NC}"
             if ! gacp; then
                 gacp_failed+=("$folder")
-                echo -e "${YELLOW}gacp 失败, 显示当前仓库信息以供调试:${NC}"
-                ginfo # 如果 gacp 失败, 调用 ginfo 帮助排查问题
             fi
             cd ..
         fi
     done
 
     # 汇总报告
-    if [ ${#gpl_failed[@]} -eq 0 ]; then
-        echo -e "\n${GREEN}>>> 所有目录 gpl 执行成功! <<<${NC}"
-    else
-        echo -e "\n${RED}--- gpl 失败目录 ---"
-        for folder in "${gpl_failed[@]}"; do
-            echo "- $folder"
-        done
-    fi
-    
-    if [ ${#gacp_failed[@]} -eq 0 ]; then
-        echo -e "\n${GREEN}>>> 所有目录 gacp 执行成功! <<<${NC}"
-        echo -e "
+    [[ ${#gpl_failed[@]} -eq 0 ]] && echo -e "\n${GREEN}>>> 所有目录 gpl 执行成功! <<<${NC}" || {
+        echo -e "\n${RED}--- gpl 失败目录 ---"; printf " - %s\n" "${gpl_failed[@]}";
+    }
+    [[ ${#gacp_failed[@]} -eq 0 ]] && echo -e "\n${GREEN}>>> 所有目录 gacp 执行成功! <<<${NC}" && echo -e "
 ${BLUE}
 ⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣣⠄⡀⢬⣭⣻⣷⡌⢿⣿⣿
 ⡀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠈⣆⢹⣿⣿⣿⡈⢿⣿
@@ -364,11 +354,7 @@ ${BLUE}
 ⡘⣿⡀⢻⣿⣿⣿⣿⣿⣿⣿⣧⠸⣿⣿⣿⣿⣿⣷⡿⠟⠉⠄⠄
 ⣷⡈⢷⡀⠙⠛⠻⠿⠿⠿⠿⠿⠷⠾⠿⠟⣛⣋⣥⣶⣄⠄⢀⣄
 ${NC}
-"
-    else
-        echo -e "\n${RED}--- gacp 失败目录 ---"
-        for folder in "${gacp_failed[@]}"; do
-            echo "- $folder"
-        done
-    fi
+" || {
+        echo -e "\n${RED}--- gacp 失败目录 ---"; printf " - %s\n" "${gacp_failed[@]}";
+    }
 }
