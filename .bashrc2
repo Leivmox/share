@@ -15,6 +15,7 @@
 
 # 2. 配置你的 Git 用户名 (用于拼接 GitHub/Gitee 的远程地址)
 # 例如: export username="Leivmox"
+# 例如: export username="Leivmox"
 
 # 3. (可选) 配置一些常用 Git 仓库的简写, 方便使用 gr 命令快速跳转
 # 格式: export 简写="仓库文件夹名"
@@ -48,7 +49,7 @@ alias neo='neofetch'
 alias vimzsh='vim ~/.zshrc'
 alias vimbash='vim ~/.bashrc'
 alias vimrc='vim ~/.vimrc'
-
+123123
 # --- 颜色定义 (全局变量) ---
 RED='\033[0;31m'    # 红色
 GREEN='\033[0;32m'  # 绿色

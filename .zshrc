@@ -12,11 +12,11 @@
 # ======================================
 # 1. 配置你存放所有 Git 仓库的根文件夹路径
 # 例如: export git_lib="/Users/your_name/repositories"
-export git_lib="/path/to/your/git_lib"
+#export git_lib="/path/to/your/git_lib"
 
 # 2. 配置你的 Git 用户名 (用于拼接 GitHub/Gitee 的远程地址)
 # 例如: export username="Leivmox"
-export username="YourGitUsername"
+#export username="YourGitUsername"
 
 # 3. (可选) 配置一些常用 Git 仓库的简写, 方便使用 gr 命令快速跳转
 # 格式: export 简写="仓库文件夹名"

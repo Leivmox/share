@@ -13,8 +13,8 @@
 # ======== ⚙️ 代理配置 (请修改) ⚙️ ========
 # ======================================
 # --- Clash 用户示例 (混合端口) ---
-export PROXY_HTTP_PORT="7890"
-export PROXY_SOCKS5_PORT="7890"
+#export PROXY_HTTP_PORT="7890"
+#export PROXY_SOCKS5_PORT="7890"
 
 # --- V2RayN 用户示例 (分离端口) ---
 # export PROXY_HTTP_PORT="10809" 
