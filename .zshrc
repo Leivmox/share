@@ -50,6 +50,7 @@ alias neo='neofetch'
 alias vimzsh='vim ~/.zshrc'
 alias vimbash='vim ~/.bashrc'
 alias vimrc='vim ~/.vimrc'
+alias open='explorer .'
 
 # --- 颜色定义 (全局变量) ---
 RED='\033[0;31m'    # 红色
