@@ -15,23 +15,17 @@ Plug 'easymotion/vim-easymotion'
 "CodeGlance Pro
 "TranslateAction
 
-
-
 " ================================================================================================
 " 🐧🐧🐧 Basic settings 🐧🐧🐧
 " ================================================================================================
-"开启easymotion插
-set easymotion
 
+set easymotion
 "设置在光标距离窗口顶部或底部一定行数时，开始滚动屏幕内容的行为
 set scrolloff=10
 
 "--递增搜索功能：在执行搜索（使用 / 或 ? 命令）时，
 "Vim 会在您输入搜索模式的过程中逐步匹配并高亮显示匹配的文本。
 set incsearch
-
-"设置自动折行
-set wrap
 
 "--在搜索时忽略大小写
 set ignorecase
@@ -45,7 +39,7 @@ set number relativenumber
 "--设置返回normal模式时回到英文输入法
 set keep-english-in-normal
 
-"--将 Vim 的寄存器与系统剪贴板共享
+"--vim寄存器同步系统剪切板
 set clipboard=unnamedplus
 
 " ================================================================================================
@@ -63,14 +57,18 @@ inoremap <C-k> <Esc> :m -2<CR>gi
 xnoremap <C-j> :m '>+1<cr>gv=gv
 xnoremap <C-k> :m '<-2<cr>gv=gv
 
-"--将shift+j/k映射为向下/向上跳转5行
-nnoremap J 5j
-nnoremap K 5k
+" 使用 gc 作为注释操作符
+nmap gc <Action>(CommentByLineComment)
+vmap gc <Action>(CommentByLineComment)
 
 "--将 jj 和 jk 映射为 <Esc>
 "jj和jk为主流配置，可按喜好自行调整
 imap jj <Esc>
 imap jk <Esc>
+
+"--快速上下移动
+nmap J 5j
+nmap K 5k
 
 "--格式化（规范化）文本，即对选定的文本进行换行或重排，适应指定的文本宽度。
 "全文规范化：Ctrl+Alt+l
@@ -101,10 +99,6 @@ nmap H <action>(PreviousTab)
 nmap <C-S> <action>(SaveAll)
 imap <C-S> <Esc><action>(SaveAll)
 
-"注释/取消注释 这一行/选中行
-nmap gc :action CommentByLineComment<CR>
-vmap gc :action CommentByLineComment<CR>
-
 " e: Extract
 " extract method/function 将选中的代码片段提取为一个独立的方法(Ctrl + Alt + M)
 vmap <leader>em <action>(ExtractMethod)
@@ -134,6 +128,7 @@ let mapleader = " "
 "which-key的官方推荐配置
 set which-key
 set notimeout
+
 
 " ================================================================================================
 " 🌞🌞🌞 目录-食用手册 🌞🌞🌞
@@ -175,7 +170,7 @@ set notimeout
 "===================================== H =====================================
 " h: MoveToLeftMoveToLeft-跳转到左边的分割窗口
 "===================================== I =====================================
-" i: Insert 显示提示
+" i: Insert ⭐快速查找并跳转到下一个以 ( 开始的函数或方法调用的位置️
 "===================================== J =====================================
 " j: MoveToDown-跳转到下边的分割窗口
 "===================================== K =====================================
@@ -207,7 +202,7 @@ set notimeout
 " rt: ReRunTests-重新运行最近一次运行的测试（Unit Tests）(Ctrl + Shift + F10)
 " rn: Rename-在代码中快速更改一个标识符的名称，并自动处理所有相关的引用(Shift + F6)
 "===================================== S =====================================
-" s: Show&Stop ⭐️[目录]🎈
+" s: Show ⭐️[目录]🎈
 " st: Stop
 " ss: ShowFileStructure-显示当前打开文件的文件结构弹出窗口，其中包含文件中的类、方法、字段等结构(Alt + 7)
 " sb: ShowBookmarks-显示书签（Bookmarks）工具窗口，其中包含当前文件中设置的书签列表(Ctrl + F11)
@@ -351,8 +346,8 @@ nmap <leader>h <c-w>h
 
 "========== i ==========
 "快速查找并跳转到下一个以 ( 开始的函数或方法调用的位置️
-let g:WhichKeyDesc_ShowIntentionActions = "<leader>i 显示提示"
-nmap <leader>i <action>(ShowIntentionActions)
+let g:WhichKeyDesc_InsertAfterBrackets = "<leader>i 跳转到选一个("
+nmap <leader>i f(a
 
 
 "========== j ==========
@@ -376,7 +371,7 @@ nmap <leader>l <c-w>l
 "========== m ==========
 "打开/关闭 代码小地图
 let g:WhichKeyDesc_CodeGlance = "<leader>m 开关小地图"
-nmap <leader>m <action>(CodeGlancePro.toggle)
+nmap <leader>m <action>(CodeGlance.toggle)
 "好像更新版本后,突然用不了了,用默认的ctrl+shift+G吧
 
 
@@ -539,6 +534,5 @@ nnoremap <C-f> :NERDTreeFind<CR>
 let g:WhichKeyDesc_easymotionkey = "<leader><leader> 快速跳转插件"
 
 "普通模式输入s后输入要跳转到单词首字母(或多输入几个字母)
-"nmap s <Plug>(easymotion-bd-f)
-nmap s <Plug>(easymotion-s2)
+nmap s <Plug>(easymotion-bd-n)
 let g:WhichKeyDesc_easymotion = "s 快速跳转"
