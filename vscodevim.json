@@ -1,0 +1,343 @@
+
+{
+  // ======vim======
+  "vim.leader": "<space>",
+  // <leader> 键的等待超时时间（毫秒）。
+  "vim.leaderTimeout": 1000,
+
+  // 将这些 Ctrl 组合键的控制权交还给 VS Code，让 Vim 不处理它们。
+  "vim.handleKeys": {
+    // "<C-a>": false,
+    "<C-f>": false,
+    // "<C-b>": false,
+    "<C-h>": false
+  },
+
+  // (实验性) 提升 Vim 插件的响应优先级。
+  "extensions.experimental.affinity": {
+    "vscodevim.vim": 1
+  },
+  // 使用 Vim 命令滚动时，一次移动的行数。
+  "vim.scroll": 10,
+  // 开启相对行号模式（当前行为 '0'）。
+  "editor.lineNumbers": "relative",
+  // 启用自动换行。
+  "editor.wordWrap": "on",
+  // (需配合上一条) 将当前行的行号显示为绝对行号，实现完美相对行号。
+  "vim.relativeLineNumbers": true,
+  // 启用强大的光标快速跳转功能 (EasyMotion)。
+  "vim.easymotion": true,
+  // 启用增量搜索（输入时即时高亮匹配）。
+  "vim.incsearch": true,
+  // 让 Vim 的复制/粘贴与系统剪贴板互通。
+  "vim.useSystemClipboard": true,
+  // 允许 Vim 模式使用更多的 Ctrl 快捷键。
+  "vim.useCtrlKeys": true,
+  // 搜索后高亮所有匹配结果。
+  "vim.hlsearch": true,
+
+  //插入模式下
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["j", "j"],
+      "after": ["<Esc>"]
+    },
+    {
+      "before": ["j", "k"],
+      "after": ["<Esc>"]
+    }
+  ],
+
+  //命令模式下
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // 普通模式下的非递归按键绑定
+    {
+      "before": ["<leader>", "n", "l"],
+      "commands": [":nohl"]
+    },
+    {
+      "before": ["<leader>", "<leader>", "f"],
+      "after": ["leader", "leader", "2", "s"]
+    },
+    {
+      "before": ["s"],
+      "after": ["leader", "leader", "s"]
+    },
+    {
+      "before": ["<CR>"],
+      "after": ["o", "<Esc>"]
+    },
+
+    {
+      "before": ["<S-CR>"],
+      "after": ["O", "<Esc>"]
+    },
+    {
+      // goto implementation
+      "before": ["g", "i"],
+      "commands": ["editor.action.peekImplementation"]
+    },
+    {
+      // get info
+      "before": ["leader", "i"],
+      "commands": ["editor.action.showHover"]
+    },
+    {
+      // old vim `gi` command
+      "before": ["leader", "g", "i"],
+      "after": ["g", "i"]
+    },
+    {
+      // goto error
+      "before": ["leader", "g", "e"],
+      "commands": ["editor.action.marker.nextInFiles"]
+    },
+    {
+      // 终端
+      "before": ["leader", "T"],
+      "commands": ["workbench.action.terminal.toggleTerminal"]
+    },
+    {
+      // 新的J命令
+      "before": ["J"],
+      "after": ["5", "j"]
+    },
+    {
+      // 新的K命令
+      "before": ["K"],
+      "after": ["5", "k"]
+    },
+      // 用<leader> + H 和 L 代替^和$进行行首尾移动
+    {
+      "before": ["H"],
+      "after": ["^"]
+    },
+    {
+      "before": ["L"],
+      "after": ["$"]
+    },
+      // 切换标签页,请多使用vim原生gt/gT
+    {
+      "before": ["leader", "t", "p"],
+      "commands": ["workbench.action.previousEditor"]
+    },
+    {
+      "before": ["leader", "t", "n"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+      // 编辑器操作
+    {
+      "before": ["leader", "c", "d"],
+      "command": ["workbench.action.closeActiveEditor"]
+    },
+    {
+      "before": ["leader", "c", "a"],
+      "commands": ["workbench.action.closeAllEditors"]
+    },
+    {
+      "before": ["leader", "c", "o"],
+      "commands": ["workbench.action.closeOtherEditors"]
+    },
+    {
+      "before": ["<leader>", "e"],
+      "commands": ["workbench.view.explorer"]
+    },
+    {
+      // 打开扩展侧边栏：todo-tree
+      "before": ["leader", "s", "t"],
+      "commands": ["workbench.view.extension.todo-tree-container"]
+    },
+
+    //注释/取消注释
+    {
+      "before": ["g", "c"],
+      "commands": ["editor.action.commentLine"]
+    },
+    {
+      //设置/取消书签
+      "before": ["m", "a"],
+      "commands": ["bookmarks.toggle"]
+    },
+    {
+      "before": ["<leader>", "b"],
+      "commands": ["bookmarks.list"]
+    },
+    {
+      // 打开扩展侧边栏：书签
+      "before": ["leader", "s", "b"],
+      "commands": ["workbench.view.extension.bookmarks"]
+    },
+    {
+      //在终端中运行python
+      "before": ["<leader>", "r", "p"],
+      "commands": ["python.execInTerminal"]
+    },
+    {
+      // 删除all注释
+      "before": ["leader", "r", "a", "c"],
+      "commands": ["extension.removeAllComments"]
+    },
+    //====================
+    //====================
+    // --- 窗口跳转 (Focus) ---
+    {
+      "before": ["<leader>", "w", "h"],
+      "commands": ["workbench.action.focusLeftGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "j"],
+      "commands": ["workbench.action.focusBelowGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "k"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "l"],
+      "commands": ["workbench.action.focusRightGroup"]
+    },
+    // 快捷版，很多人也喜欢这样配置
+    {
+      "before": ["<leader>", "h"],
+      "commands": ["workbench.action.focusLeftGroup"]
+    },
+    {
+      "before": ["<leader>", "j"],
+      "commands": ["workbench.action.focusBelowGroup"]
+    },
+    {
+      "before": ["<leader>", "k"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["<leader>", "l"],
+      "commands": ["workbench.action.focusRightGroup"]
+    },
+
+    // --- 窗口分割 (Split) ---
+    // 'v' for vertical split. 'splitEditorOrthogonal' 总是与当前布局垂直分割，更智能
+    {
+      "before": ["<leader>", "w", "v"],
+      "commands": ["workbench.action.splitEditorOrthogonal"]
+    },
+    // 's' for horizontal split.
+    {
+      "before": ["<leader>", "w", "s"],
+      "commands": ["workbench.action.splitEditor"]
+    },
+
+    // --- 窗口关闭 (Close) ---
+    // 'c' for close current window/group
+    {
+      "before": ["<leader>", "w", "c"],
+      "commands": ["workbench.action.closeEditorsInGroup"]
+    },
+    // 'o' for "only this window"
+    {
+      "before": ["<leader>", "w", "o"],
+      "commands": ["workbench.action.closeEditorsInOtherGroups"]
+    },
+
+    // --- 移动编辑器到其他窗口 (Move) ---
+    // 大写的 H/J/K/L 用于移动窗口
+    {
+      "before": ["<leader>", "w", "H"],
+      "commands": ["workbench.action.moveEditorToLeftGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "J"],
+      "commands": ["workbench.action.moveEditorToBelowGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "K"],
+      "commands": ["workbench.action.moveEditorToAboveGroup"]
+    },
+    {
+      "before": ["<leader>", "w", "L"],
+      "commands": ["workbench.action.moveEditorToRightGroup"]
+    },
+    // --- 窗口布局 (Layout) ---
+    // 'u' for unite/union is a good choice you already have
+    {
+      "before": ["<leader>", "w", "u"],
+      "commands": ["workbench.action.joinAllGroups"]
+    },
+    // '=' to make window widths equal
+    {
+      "before": ["<leader>", "w", "="],
+      "commands": ["workbench.action.evenEditorWidths"]
+    },
+    //====================
+    //====================
+    {
+      // 在当前文件中打开搜索面板（相当于 Ctrl+F）
+      "before": ["<leader>", "f", "f"],
+      "commands": ["actions.find"]
+    },
+    {
+      // 打开资源管理器并选中当前文件
+      "before": ["<leader>", "f", "l"],
+      "commands": [
+        "workbench.view.explorer", // 打开左侧资源管理器
+        "workbench.files.action.showActiveFileInExplorer" // 在资源管理器中选中当前文件
+      ]
+    },
+    {
+      // 打开全局搜索（相当于 Ctrl+Shift+F）
+      "before": ["<leader>", "f", "t"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      // 格式化当前文件
+      "before": ["<leader>", "f", "m"],
+      "commands": ["editor.action.formatDocument"]
+    },
+    //预览markdown
+    {
+      "before": ["<leader>", "m", "d"],
+      "commands": [
+        "markdown-preview-enhanced.openPreviewToTheSide"
+        // "workbench.action.focusLeftGroup"
+      ]
+    }
+  ],
+
+  //可视模式
+  "vim.visualModeKeyBindingsNonRecursive": [
+    // 可视模式下的非递归按键绑定
+    {
+      "before": ["g", "c"],
+      "commands": ["editor.action.commentLine"]
+    },
+    {
+      "before": [">"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["<"],
+      "commands": ["editor.action.outdentLines"]
+    },
+    {
+      "before": ["H"],
+      "after": ["^"]
+    },
+    {
+      "before": ["L"],
+      "after": ["g", "_"]
+    },
+    {
+      "before": ["J"],
+      "after": ["5", "j"]
+    },
+    {
+      "before": ["K"],
+      "after": ["5", "k"]
+    },
+    //搜索可视块中的内容
+    {
+      "before": ["<Leader>", "/"],
+      "after": ["y", "/", "<C-r>", "\"", "<Enter>"]
+    }
+  ],
+  // ======
+}
