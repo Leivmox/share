@@ -47,6 +47,7 @@ alias sck='screen -X quit' # 强制终止当前会话
 
 # --- 系统与配置编辑别名 ---
 alias neo='neofetch'
+alias ff='fastfetch'
 alias vimzsh='vim ~/.zshrc'
 alias vimbash='vim ~/.bashrc'
 alias vimrc='vim ~/.vimrc'
