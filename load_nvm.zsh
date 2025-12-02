@@ -2,9 +2,8 @@
 export NVM_DIR="$HOME/.nvm"
 
 # 定义一个通用的加载器函数
-# 注意：这个函数名现在不叫 load_nvm 了，以避免混淆
 lazy_load_nvm() {
-  # 先取消我们自己定义的这几个拦截函数
+  # 先取消定义的这几个拦截函数
   unset -f nvm node npm
 
   # 加载真正的 nvm 脚本
