@@ -93,6 +93,8 @@ cppo() {
 # ======================================
 
 # --- Git 基础别名 ---
+alias gst='git status'
+alias ga='git add'
 alias gaa='git add .'
 alias gpl='git pull'
 alias gph="git push"
@@ -101,6 +103,7 @@ alias gplall="gr && execute_gpl_and_ginfo_in_folders" # <-- 已更新
 alias gacpall="gr && execute_gpl_gacp_and_hhh_in_folders"
 alias gitall='gacpall'
 alias gall='gacpall'
+alias glol='git log --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'\'' --all'
 
 # --- 检查当前目录是否为 Git 仓库的通用函数 ---
 check_git_repo() {
