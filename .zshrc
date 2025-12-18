@@ -37,7 +37,7 @@ alias mv='mv -i -v'
 alias cp='cp -i -v'
 alias :q='exit'
 alias :wq='exit'
-alias mr='mvn spring-boot:run -Dfile.encoding=UTF-8'
+alias msbr='mvn spring-boot:run -Dfile.encoding=UTF-8'
 
 # --- Screen 工具别名 ---
 alias scs='screen -S'   # 创建会话
