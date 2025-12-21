@@ -64,6 +64,11 @@ return
         ; 向 VS Code 窗口发送切换输入法的请求 (0x04090409 = 美国英语)。
         PostMessage, 0x0050, 0, 0x04090409, , A
     return
+
+#IfWinActive ahk_exe WindowsTerminal.exe
+    ~Esc::
+        PostMessage, 0x50, 0, 0x04090409, , A
+    return
 #IfWinActive ; 结束 VS Code 的专属区域，确保后续热键是全局的。
 
 
