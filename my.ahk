@@ -101,11 +101,26 @@ return
     ; --- CapsLock 单按变 Esc ---
     CapsLock::SendInput {Blind}{Esc}
 
-    ; --- 导航层 (你指定的物理键位: M Y N U) ---
-    CapsLock & SC032::SendInput {Left}   ; 物理 M -> 左
-    CapsLock & SC015::SendInput {Down}   ; 物理 Y -> 下
-    CapsLock & SC031::SendInput {Up}     ; 物理 N -> 上
-    CapsLock & SC016::SendInput {Right}  ; 物理 U -> 右
+    ; --- NEW: CapsLock + A 切换大小写锁定 ---
+    CapsLock & a::
+        if GetKeyState("CapsLock", "T") ; 如果当前是大写开启状态
+        {
+            SetCapsLockState, AlwaysOff ; 强制关闭
+            ShowTip("CapsLock: OFF (小写)")
+        }
+        else
+        {
+            SetCapsLockState, On      ; 强制开启
+            ShowTip("CapsLock: ON (大写)")
+        }
+    return
+
+; --- 导航层 (强烈建议：物理 HJKL) ---
+    ; 只要你手指放在主行上，不用动就能按到
+    CapsLock & SC023::SendInput {Left}   ; 物理 H
+    CapsLock & SC024::SendInput {Down}   ; 物理 J
+    CapsLock & SC025::SendInput {Up}     ; 物理 K
+    CapsLock & SC026::SendInput {Right}  ; 物理 L
     
     ; --- 编辑 ---
     CapsLock & SC02E::SendInput ^{Insert} ; 物理 C 复制
@@ -129,6 +144,7 @@ return
     WinClose, A
 return
 
+#SC012::Send #e
 ^!q::WinMinimize, A
 ^!t::Run, "D:\Windows\WindowsTerminal\wt.exe"
 
