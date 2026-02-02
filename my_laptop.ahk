@@ -164,7 +164,7 @@ return
 ; 2. 打开终端 (改为系统路径，避免笔记本无D盘报错)
 ; 如果安装了 Windows Terminal，wt.exe 通常在环境变量中
 ; 如果没有，可以改为 powershell.exe
-^!t::Run, wt.exe 
+^!t::Run, "D:\Windows\WindowsTerminal\wt.exe"
 
 
 ; --- 辅助函数 ---
