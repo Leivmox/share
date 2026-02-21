@@ -1,10 +1,11 @@
-﻿; ==================================================================
+; ==================================================================
 ; AHK 终极二合一: Colemak-DH + 增强层 (自定义物理键位版)
 ; ==================================================================
-
+#MaxHotkeysPerInterval 200
 #SingleInstance force
 #NoEnv
 #InstallKeybdHook
+
 SetWorkingDir %A_ScriptDir%
 
 ; --- 1. 管理员权限 ---
@@ -25,7 +26,6 @@ SetCapsLockState, AlwaysOff
 global ColemakEnabled := true  ; 默认开启 Colemak
 global EnglishID := 0x04090409 
 global ChineseID := 0x08040804 
-
 
 ; ==================================================================
 ; 【控制区】 模式切换
@@ -53,7 +53,6 @@ return
 CapsLock & LAlt::
     DllCall("PostMessage", "Ptr", WinExist("A"), "UInt", 0x50, "Ptr", 0, "Ptr", ChineseID)
 return
-
 
 ; ==================================================================
 ; 【Colemak 映射区】 核心逻辑
@@ -92,7 +91,6 @@ return
 
 #If ; --- Colemak 结束 ---
 
-
 ; ==================================================================
 ; 【增强功能区】 导航/编辑/系统 (非 CS2 生效)
 ; ==================================================================
@@ -115,7 +113,7 @@ return
         }
     return
 
-; --- 导航层 (强烈建议：物理 HJKL) ---
+    ; --- 导航层 (强烈建议：物理 HJKL) ---
     ; 只要你手指放在主行上，不用动就能按到
     CapsLock & SC023::SendInput {Left}   ; 物理 H
     CapsLock & SC024::SendInput {Down}   ; 物理 J
@@ -127,16 +125,30 @@ return
     CapsLock & SC02F::SendInput +{Insert} ; 物理 V 粘贴
     CapsLock & Backspace::SendInput {Delete}
 
+    ; --- [新增] 标点符号区 (使用 CapsLock 触发) ---
+    ; CapsLock + , -> 书名号并回退光标 (方便输入内容)
+    CapsLock & ,::
+        SendInput {Text}《》
+        SendInput {Left}
+    return
+
+    ; CapsLock + . -> 中文句号 (即使在英文模式下也能打出)
+    CapsLock & .::SendInput {Text}。
+
+    ; CapsLock + / -> 倒问号 (或者你可以改成中文问号？)
+    CapsLock & /::SendInput {Text}¿ 
+
     ; --- 系统快捷键 (右Alt) ---
-    >!SC026::Send #l  ; 右Alt + 物理 L -> 锁屏 (Win+L)
+    ; 使用 DllCall 直接调用系统锁屏，避免 Win 键卡死
+    >!SC026::DllCall("User32\LockWorkStation")
     >!SC019::Send #p  ; 右Alt + 物理 P -> 投影 (Win+P)
 
 #If ; --- 增强区结束 ---
 
-
 ; ==================================================================
 ; 【全局快捷键】
 ; ==================================================================
+
 !q::
     WinGetClass, class, A
     if (class ~= "Progman|WorkerW")
@@ -145,9 +157,10 @@ return
 return
 
 #SC012::Send #e
-^!q::WinMinimize, A
-^!t::Run, "D:\Windows\WindowsTerminal\wt.exe"
 
+^!q::WinMinimize, A
+
+^!t::Run, "D:\Windows\WindowsTerminal\wt.exe"
 
 ; --- 辅助函数 ---
 ShowTip(Text) {
