@@ -1,5 +1,8 @@
 "该“中文版”指whichkey的窗口提示为中文
 
+" 映射 <Leader>dc 为删除所有 // 注释行 (delete comments)
+nnoremap <leader>dc :%s!\s*//.*!!<CR>:g/^\s*$/d<CR>
+
 " ================================================================================================
 " 🍰🍰🍰 Extensions 🍰🍰🍰
 " ================================================================================================
@@ -47,8 +50,8 @@ set showMarksInGutter
 " 🌍🌍🌍 No Leader Keymaps 🌍🌍🌍
 " ================================================================================================
 "--普通模式下使用回车键，向下/向上 增加一行
-nmap <CR> o<Esc>
-nmap <S-Enter> O<Esc>
+nnoremap <CR> o<Esc>
+nnoremap <S-Enter> O<Esc>
 
 "--在普通和插入模式下，向下交换行/向上交换行
 nnoremap <C-j> :m +1<CR>
@@ -58,79 +61,87 @@ inoremap <C-k> <Esc> :m -2<CR>gi
 xnoremap <C-j> :m '>+1<cr>gv=gv
 xnoremap <C-k> :m '<-2<cr>gv=gv
 
-" 使用 gc 作为注释操作符
-nmap gc <Action>(CommentByLineComment)
-vmap gc <Action>(CommentByLineComment)
 
 "--将 jj 和 jk 映射为 <Esc>
 "jj和jk为主流配置，可按喜好自行调整
-imap jj <Esc>
-imap jk <Esc>
+inoremap jj <Esc>
+inoremap jk <Esc>
 
 "--快速上下移动
-nmap J 5j
-nmap K 5k
+nnoremap J 5j
+nnoremap K 5k
+vnoremap J 5j
+vnoremap K 5k
 
 "快速移动到开头和结尾
-nmap H ^
-nmap L $
+nnoremap H ^
+nnoremap L $
+
+" 将 PageDown 映射为向下滚动半页 (Ctrl+d)
+noremap <PageDown> <C-d>
+" 将 PageUp 映射为向上滚动半页 (Ctrl+u)
+noremap <PageUp> <C-u>
 
 "--格式化（规范化）文本，即对选定的文本进行换行或重排，适应指定的文本宽度。
 "全文规范化：Ctrl+Alt+l
-map Q gq
+xnoremap Q gq
+nnoremap Q gq
+
+" 使用 gc 作为注释操作符
+let g:WhichKeyDesc_g_gc = "gc 行注释/取消注释"
+nmap gc <Action>(CommentByLineComment)k
+vmap gc <Action>(CommentByLineComment)
 " --像鼠标悬停一样显示错误提示
+let g:WhichKeyDesc_g_gh = "gh 显示当前错误详情"
 nmap gh <action>(ShowErrorDescription)
 "跳转到下一个错误或警告
-nmap ge <action>(GotoNextError)
 let g:WhichKeyDesc_GotoNextError = "ge 跳转到下一个错误或警告"
+nmap ge <action>(GotoNextError)
 "在源代码和测试代码之间快速切换
-" !!!与gt和gT的vim原生切换标签页冲突!!!
-"nmap gt <action>(GotoTest)
-"let g:WhichKeyDesc_GotoTest = "gt 在源代码和测试代码之间快速切换"
+let g:WhichKeyDesc_GotoTest = "g. 在源代码和测试代码之间快速切换"
+nmap g. <action>(GotoTest)
 "将光标移动到上一个方法的声明处
-" last changed in current buffer(file)
-nmap gm <action>(MethodUp)
 let g:WhichKeyDesc_MethodUp = "gm 将光标移动到上一个方法的声明处"
+nmap gm <action>(MethodUp)
 "跳转到当前接口或抽象类的实现处
-nmap ga <action>(GotoImplementation)
 let g:WhichKeyDesc_GotoImplementation = "ga 跳转到当前接口或抽象类的实现处"
+nmap ga <action>(GotoImplementation)
 
 
 " --- 多光标/多选区 (Multiple Cursors / Selections) ---
 " 模拟 VSCode 中的 'gb' 功能，选中下一个匹配项。
+let g:WhichKeyDesc_g = "+goto/multi-cursor"
 
+let g:WhichKeyDesc_g_gb = "gb 选中下一个匹配项 (多光标)"
 " 在普通模式下 (nmap)，按下 gb 会选中光标下的单词，并准备好多光标编辑。
 nmap gb <action>(SelectNextOccurrence)
 " 在可视模式下 (vmap)，按下 gb 会在已有的选择基础上，继续添加下一个匹配项。
 vmap gb <action>(SelectNextOccurrence)
+
 " 添加一个 'gB' 快捷键来取消最后一个选择，与 gb 对应。
+let g:WhichKeyDesc_g_gB = "gB 取消上一个多光标选择"
 nmap gB <action>(UnselectPreviousOccurrence)
 vmap gB <action>(UnselectPreviousOccurrence)
 
-
-
 " bookmark 切换书签
-nmap ma <action>(ToggleBookmark)
+let g:WhichKeyDesc_m = "+mark/bookmark"
+
 let g:WhichKeyDesc_bookmark = "ma 书签"
+nmap ma <action>(ToggleBookmark)
 
 "将Ctrl + s 映射为保存文档(也可以在VIM设置里将此快捷键设置为IDEA的快捷键)
 nmap <C-S> <action>(SaveAll)
 imap <C-S> <Esc><action>(SaveAll)
 
-" e: Extract重构
-" extract method/function 将选中的代码片段提取为一个独立的方法(Ctrl + Alt + M)
-vmap <leader>em <action>(ExtractMethod)
-" extract constant （引入常量）的重构操作:将选中的代码片段抽取为一个常量，并自动替换选中的代码片段为新的常量引用(Ctrl + Alt + C)
-vmap <leader>ec <action>(IntroduceConstant)
-" extract field （引入字段）的重构操作:将选中的代码片段转化为一个新的字段，并自动将选中的代码片段替换为对该字段的引用(Ctrl + Alt + F)
-vmap <leader>ef <action>(IntroduceField)
-" extract variable （引入变量）的重构操作:将选中的代码片段抽取为一个新的变量，并自动替换选中的代码片段为新的变量引用(Ctrl + Alt + V)
-vmap <leader>ev <action>(IntroduceVariable)
 
 " 当你按下 ' 时，实际执行 ` 的功能 (精确跳转到光标位置)
 nnoremap ' `
 " 当你按下 ` 时，实际执行 ' 的功能 (跳转到标记所在行的行首)
 nnoremap ` '
+
+" 在可视模式下按 y，复制后光标保持在原地
+xnoremap y ygv<Esc>
+
 
 " ================================================================================================
 " ⭐️⭐️⭐️ Leader Keymaps ⭐️⭐️⭐️ =====================================
@@ -159,27 +170,27 @@ set notimeout
 "===================================== B =====================================
 " <leader>b:
 "===================================== C =====================================
-" <leader>c:  Code Or Close-[目录]
+" <leader>c:  Code Or Close-📂[目录]
 " <leader>cc: CodeCompletion-自动补全
 " <leader>cd: CloseEditor-关闭当前标签页
 " <leader>ca: CloseAllEditors-关闭所有标签页
 " <leader>co: CloseAllEditorsButActive-关闭其他标签页
 "===================================== D =====================================
-" <leader>d: Debug Or Delete-[目录]
+" <leader>d: Debug Or Delete-📂[目录]
 " <leader>dp: BreakPoint-打断点/解除断点
 " <leader>db: DeBug-调试
 " [V]<leader>d: DeleteAndCopyClipboard-在可视模式中：删除选择的文本并复制到剪切板
 "===================================== E =====================================
-" <leader>e: ToggleExplorer ⭐️ 激活项目工具窗口
+" <leader>e: ToggleExplorer 激活项目工具窗口(可视模式:📂重构)
 "===================================== F =====================================
-" <leader>f: Find Or Format ⭐[目录]
+" <leader>f: Find Or Format📂[目录]
 " <leader>ff: FindFile-快速 导航/查找 项目中的其他文件(Ctrl + n)
 " <leader>fl: FindFileLocation-将当前编辑的文件在项目视图中进行选中定位(Ctrl+f)
 " <leader>ft: FindText-在整个项目中查找指定的文本、关键字或正则表达式，包括代码文件、配置文件和其他文件等(Ctrl + Shift + F)
 " <leader>fc: Commands-打开 "Find Action"（查找动作）对话框(Ctrl + Shift + A)
 " <leader>fm: Format-重新格式化代码，使其符合预定义的代码样式和规范 and 优化导入语句，删除未使用的导入，并将导入语句按字母顺序进行排列
 "===================================== G =====================================
-" <leader>g: Git Or Generate [目录]
+" <leader>g: Git Or Generate 📂[目录]
 " <leader>gr: RollbackHunk-执行版本控制（VCS）的回滚操作，将修改的代码还原到之前的版本
 " <leader>gc: GenerateConstructor-生成构造函数
 " <leader>gg: GenerateGetter-生成getter函数
@@ -187,10 +198,11 @@ set notimeout
 " <leader>ga: GenerateGetterAndSetter-生成getter和setter函数
 " <leader>ge: GenerateEquals-生成equals和hashcode的重写方法
 " <leader>gd: ShowTabbedFileHistory-显示文件的版本控制历史(git)
+" <leader>gm: ExtractMethod-提取方法(ctrl+alt+m)
 "===================================== H =====================================
 " <leader>h: MoveToLeftMoveToLeft-跳转到左边的分割窗口
 "===================================== I =====================================
-" <leader>i: Insert ⭐快速查找并跳转到下一个以 ( 开始的函数或方法调用的位置️
+" <leader>i: Insert-快速查找并跳转到下一个以 ( 开始的函数或方法调用的位置️
 "===================================== J =====================================
 " <leader>j: MoveToDown-跳转到下边的分割窗口
 "===================================== K =====================================
@@ -200,7 +212,7 @@ set notimeout
 "===================================== M =====================================
 " <leader>m: CodeGlance-打开/关闭地图(需要CodeGlance Pro插件)
 "===================================== N =====================================
-" <leader>n: NERDTree Or No ⭐️[目录]
+" <leader>n: NERDTree Or No 📂[目录]
 " <leader>nn: NERDTreeFocus-将使焦点转移到 NERDTree 窗口(配置在NERDTree专栏)
 " <leader>nh: NoHighlight-取消搜索高亮显示
 " <leader>nd: NewDir-新建文件夹
@@ -215,14 +227,14 @@ set notimeout
 "===================================== Q =====================================
 " <leader>q:
 "===================================== R =====================================
-" <leader>r: Run Or Re ⭐️[目录]
+" <leader>r: Run Or Re 📂[目录]
 " <leader>ru: Run-运行
 " <leader>rc: RunClass-运行当前编辑器中的文件或类(Shift + F10)
 " <leader>rr: ReRun-重新运行最近一次运行的程序或测试(Ctrl + Shift + F10)
 " <leader>rt: ReRunTests-重新运行最近一次运行的测试（Unit Tests）(Ctrl + Shift + F10)
 " <leader>rn: Rename-在代码中快速更改一个标识符的名称，并自动处理所有相关的引用(Shift + F6)
 "===================================== S =====================================
-" <leader>s: Show/stop/select ⭐️[目录]
+" <leader>s: Show/stop/select 📂[目录]
 " <leader>st: Stop
 " <leader>ss: ShowFileStructure-显示当前打开文件的文件结构弹出窗口，其中包含文件中的类、方法、字段等结构(Alt + 7)
 " <leader>sb: ShowBookmarks-显示书签（idea的Bookmarks）工具窗口，其中包含当前文件中设置的书签列表(Ctrl + F11)
@@ -230,7 +242,7 @@ set notimeout
 " <leader>sp: ShowParameterInfo-用于显示方法或函数的参数信息(Ctrl + p)
 " <leader>sa: SelectAllOccurrences,-选中文件中所有匹配项,一般用多光标操作(Ctrl+Alt+Shift+J)
 "===================================== T =====================================
-" <leader>t: Tabs(请多使用vim原生gt/gT) ⭐️[目录]
+" <leader>t: Tabs(请多使用vim原生gt/gT) 📂[目录]
 " <leader>tn: 切换到下一个标签页(gt)
 " <leader>tp: 切换到上一个标签页(gT)
 "===================================== U =====================================
@@ -238,7 +250,7 @@ set notimeout
 "===================================== V =====================================
 " <leader>v:
 "===================================== W =====================================
-" <leader>w: Window ⭐️[目录]
+" <leader>w: Window 📂[目录]
 " <leader>wh: MoveToLeft-跳转到左边的窗口(<c-w>h)
 " <leader>wj: MoveToDown-跳转到下边的窗口(<c-w>j)
 " <leader>wk: MoveToUp-跳转到上边的窗口(<c-w>k)
@@ -256,7 +268,7 @@ set notimeout
 " <leader>y: CopyClipboard-将选中行复制到剪切板
 " [V]<leader>y: CopyClipboard-在可视模式中：将选中文字复制到剪切板
 "===================================== Z =====================================
-" <leader>z: zip(fold) ⭐️[目录]
+" <leader>z: zip(fold) 📂[目录]
 " <leader>zo: unZipAll-展开所有代码折叠区域(Ctrl + Shift + 加号键)
 " <leader>zc: ZipAll-折叠所有代码折叠区域(Ctrl + Shift + 减号键)
 "=============================================================================
@@ -276,7 +288,7 @@ let g:WhichKeyDesc_LeaderKeymap= "<leader> 🌟🌟🌟紫色为二级目录🌟
 
 
 "========== c =========c
-let g:WhichKeyDesc_CodeAndClose = "<leader>c Code&关闭"
+let g:WhichKeyDesc_CodeAndClose = "<leader>c 📂Code&关闭"
 
 "关闭所有标签页
 let g:WhichKeyDesc_CodeAndClose_CloseAllEditors = "<leader>ca 关闭所有标签页"
@@ -293,7 +305,7 @@ nmap <leader>co :action CloseAllEditorsButActive<CR>
 
 
 "========== d ==========
-let g:WhichKeyDesc_DeBugOrDelete= "<leader>d 调试&删除"
+let g:WhichKeyDesc_DeBugOrDelete= "<leader>d 📂调试&删除"
 "打断点/解除断点
 let g:WhichKeyDesc_DebugOrDelete_BreakPoint = "<leader>dp 打断点/解除断点 "
 nmap <leader>dp <Action>(ToggleLineBreakpoint)
@@ -302,7 +314,7 @@ let g:WhichKeyDesc_DebugOrDelete_DeBug = "<leader>db 调试"
 nmap <leader>db <Action>(Debug)
 "在可视模式中：删除选择的文本并复制到剪切板
 let g:WhichKeyDesc_DebugOrDelete_DeleteAndCopyToClipboard = "<leader>dd 删除并复制到剪切板"
-vmap <leader>dd "+d
+vnoremap <leader>dd "+d
 
 
 "========== e ==========
@@ -310,9 +322,24 @@ vmap <leader>dd "+d
 let g:WhichKeyDesc_ToggleExplorerOrExtract = "<leader>e 打开文件列表"
 nmap <leader>e <action>(ActivateProjectToolWindow)
 
+" 可视模式:
+" Extract 重构
+let g:WhichKeyDesc_Extract = "<leader>e 📂提取/重构"
+" extract method/function 将选中的代码片段提取为一个独立的方法 (Ctrl + Alt + M)
+let g:WhichKeyDesc_Extract_Method = "<leader>em 提取方法 (Method)"
+vmap <leader>em <action>(ExtractMethod)i
+" extract constant 引入常量: 将选中的代码片段抽取为一个常量 (Ctrl + Alt + C)
+let g:WhichKeyDesc_Extract_Constant = "<leader>ec 提取常量 (Constant)"
+vmap <leader>ec <action>(IntroduceConstant)i
+" extract field 引入字段: 将选中的代码片段转化为一个新的字段 (Ctrl + Alt + F)
+let g:WhichKeyDesc_Extract_Field = "<leader>ef 提取字段 (Field)"
+vmap <leader>ef <action>(IntroduceField)i
+" extract variable 引入变量: 将选中的代码片段抽取为一个新的变量 (Ctrl + Alt + V)
+let g:WhichKeyDesc_Extract_Variable = "<leader>ev 提取变量 (Variable)"
+vmap <leader>ev <action>(IntroduceVariable)i
 
 "========== f ==========
-let g:WhichKeyDesc_FindOrFormat = "<leader>f 查找&格式化"
+let g:WhichKeyDesc_FindOrFormat = "<leader>f 📂查找&格式化"
 
 "快速 导航/查找 项目中的其他文件(Ctrl + n)
 let g:WhichKeyDesc_FindOrFormat_FindFile = "<leader>ff 查找文件"
@@ -328,11 +355,11 @@ let g:WhichKeyDesc_FindOrFormat_Commands = "<leader>fc 打开查找菜单"
 nmap <leader>fc <action>(GotoAction)
 "重新格式化代码，使其符合预定义的代码样式和规范 \| 优化导入语句，删除未使用的导入，并将导入语句按字母顺序进行排列
 let g:WhichKeyDesc_FindOrFormat_Format = "<leader>fm 格式化代码"
-nmap <leader>fm <action>(ReformatCode) \| <action>(OptimizeImports)
-
+"nmap <leader>fm <action>(ReformatCode) \| <action>(OptimizeImports)
+nmap <leader>fm :action ReformatCode <bar> action OptimizeImports<CR>
 
 "========== g ==========
-let g:WhichKeyDesc_GitOrGenerate = "<leader>g Git&构造"
+let g:WhichKeyDesc_GitOrGenerate = "<leader>g 📂Git&构造"
 
 "执行版本控制（VCS）的回滚操作，将修改的代码还原到之前的版本
 let g:WhichKeyDesc_GitOrGenerate_RollbackHunk = "<leader>gr git回滚"
@@ -359,35 +386,38 @@ nmap <leader>gt <action>(Actions.ActionsPlugin.GenerateToString)
 nmap <leader>gd <action>(Vcs.ShowTabbedFileHistory)
 let g:WhichKeyDesc_DebugOrDelete_ShowTabbedFileHistory = "<leader>gd 显示文件的版本控制历史"
 
+"提取方法 (Extract Method)
+vmap <Leader>gm <Action>(ExtractMethod)
+let g:WhichKeyDesc_GitOrGenerate_ExtractMethod = "<leader>gm 提取方法"
 
 "========== h ==========
 "跳转到左边的分割窗口
 let g:WhichKeyDesc_Show_MoveToLeft = "<leader>h 向左跳转"
-nmap <leader>h <c-w>h
+nnoremap <leader>h <c-w>h
 
 
 "========== i ==========
 "快速查找并跳转到下一个以 ( 开始的函数或方法调用的位置️
 let g:WhichKeyDesc_InsertAfterBrackets = "<leader>i 跳转到选一个("
-nmap <leader>i f(a
+nnoremap <leader>i f(a
 
 
 "========== j ==========
 "跳转到下边的分割窗口
 let g:WhichKeyDesc_Show_MoveToDown = "<leader>j 向下跳转"
-nmap <leader>j <c-w>j
+nnoremap <leader>j <c-w>j
 
 
 "========== k ==========
 "跳转到上边的分割窗口
 let g:WhichKeyDesc_Show_MoveToUp = "<leader>k 向上跳转"
-nmap <leader>k <c-w>k
+nnoremap <leader>k <c-w>k
 
 
 "========== l ==========
 "跳转到右边的窗口
 let g:WhichKeyDesc_Show_MoveToRight = "<leader>l 向右跳转"
-nmap <leader>l <c-w>l
+nnoremap <leader>l <c-w>l
 
 
 "========== m ==========
@@ -398,7 +428,7 @@ nmap <leader>m <action>(CodeGlance.toggle)
 
 
 "========== n ==========
-let g:WhichKeyDesc_NERDTreeOrNew = "<leader>n 目录树&新建"
+let g:WhichKeyDesc_NERDTreeOrNew = "<leader>n 📂目录树&新建"
 
 "取消搜索高亮显示(No Highlight)
 let g:WhichKeyDesc_NERDTreeOrNew_Highlight = "<leader>nl 取消搜索高亮"
@@ -414,20 +444,20 @@ nmap <leader>nc <action>(NewClass)
 "========== p ==========
 "从剪切板粘贴到下面行
 let g:WhichKeyDesc_PasteClipboardDown = "<leader>p 从剪切板粘贴到下面行"
-nmap <leader>p "+p
+nnoremap <leader>p "+p
 "从剪切板粘贴到上面行
 let g:WhichKeyDesc_PasteClipboardUp = "<leader>P 从剪切板粘贴到上面行"
-nmap <leader>P "+P
+nnoremap <leader>P "+P
 "在可视模式中：从剪切板粘贴到下面行
 let g:WhichKeyDesc_PasteClipboardDown = "<leader>p 从剪切板粘贴到下面行"
-vmap <leader>p "+p
+vnoremap <leader>p "+p
 "在可视模式中：从剪切板粘贴到上面行
 let g:WhichKeyDesc_PasteClipboardUp = "<leader>P 从剪切板粘贴到上面行"
-vmap <leader>P "+P
+vnoremap <leader>P "+P
 
 
 "========== r ==========
-let g:WhichKeyDesc_RunOrRe = "<leader>r 运行&重新"
+let g:WhichKeyDesc_RunOrRe = "<leader>r 📂运行&重新"
 
 " ru: Run-运行 (运行后自动聚焦)
 let g:WhichKeyDesc_Run_Run = "<leader>ru 运行"
@@ -436,19 +466,19 @@ nmap <leader>ru :action Run <bar> action ActivateRunToolWindow<CR>
 " rc: RunClass-运行当前编辑器中的文件或类(Shift + F10) (运行后自动聚焦)
 let g:WhichKeyDesc_Run_RunContext = "<leader>rc 运行当前文件"
 nmap <leader>rc :action RunClass <bar> action ActivateRunToolWindow<CR>
-"重新运行最近一次运行的程序或测试(Ctrl+Shift + F10)
-let g:WhichKeyDesc_RunOrRe_ReRun = "<leader>rr 重新运行"
-nmap <leader>rr <action>(Rerun)
+""重新运行最近一次运行的程序或测试(Ctrl+Shift + F10)
+"let g:WhichKeyDesc_RunOrRe_ReRun = "<leader>rr 重新运行"
+"nmap <leader>rr <action>(Rerun)
 " rr: ReRun-重新运行最近一次运行的测试,重新运行 (运行后自动聚焦)
 let g:WhichKeyDesc_Run_Rerun = "<leader>rr 重新运行"
 nmap <leader>rr :action Rerun <bar> action ActivateRunToolWindow<CR>
 "在代码中快速更改一个标识符的名称，并自动处理所有相关的引用(Shift + F6)
 let g:WhichKeyDesc_RunOrRe_Rename = "<leader>rn 重构"
-map <leader>rn <action>(RenameElement)
+nmap <leader>rn <action>(RenameElement)
 
 
 "========== s ==========
-let g:WhichKeyDesc_Show = "<leader>s 显示&停止&查找"
+let g:WhichKeyDesc_Show = "<leader>s 📂显示&停止&查找"
 
 "显示当前打开文件的文件结构弹出窗口，其中包含文件中的类、方法、字段等结构(Alt + 7)
 let g:WhichKeyDesc_Show_FileStructure = "<leader>ss 显示文件结构"
@@ -471,7 +501,7 @@ nmap <leader>sa <action>(SelectAllOccurrences)
 
 "========= t ==========
 " 标签页操作,请多使用vim原生gt/gT
-let g:WhichKeyDesc_Tab_Group = "<leader>t 标签页"
+let g:WhichKeyDesc_Tab_Group = "<leader>t 📂标签页"
 
 let g:WhichKeyDesc_Tab_Previous = "<leader>tp 上一个标签页"
 nnoremap <leader>tp :action PreviousTab<CR>
@@ -479,27 +509,27 @@ let g:WhichKeyDesc_Tab_Next = "<leader>tn 下一个标签页"
 nnoremap <leader>tn :action NextTab<CR>
 
 "========== w ==========
-let g:WhichKeyDesc_Windows = "<leader>w 窗口"
+let g:WhichKeyDesc_Windows = "<leader>w 📂窗口"
 
-" --- 窗口跳转 (Focus) ---
-" 使用 <leader>h/j/k/l 快速在分割窗口间跳转
-let g:WhichKeyDesc_Focus_Left = "<leader>h 左窗口"
-nmap <leader>h <C-w>h
-let g:WhichKeyDesc_Focus_Down = "<leader>j 下窗口"
-nmap <leader>j <C-w>j
-let g:WhichKeyDesc_Focus_Up = "<leader>k 上窗口"
-nmap <leader>k <C-w>k
-let g:WhichKeyDesc_Focus_Right = "<leader>l 右窗口"
-nmap <leader>l <C-w>l
 " 同时保留 <leader>w h/j/k/l 的跳转方式
 let g:WhichKeyDesc_Windows_Focus_Left = "<leader>wh 左窗口"
-nmap <leader>wh <C-w>h
+nnoremap <leader>wh <C-w>h
 let g:WhichKeyDesc_Windows_Focus_Down = "<leader>wj 下窗口"
-nmap <leader>wj <C-w>j
+nnoremap <leader>wj <C-w>j
 let g:WhichKeyDesc_Windows_Focus_Up = "<leader>wk 上窗口"
-nmap <leader>wk <C-w>k
+nnoremap <leader>wk <C-w>k
 let g:WhichKeyDesc_Windows_Focus_Right = "<leader>wl 右窗口"
-nmap <leader>wl <C-w>l
+nnoremap <leader>wl <C-w>l
+" --- 窗口跳转 (Focus) - Colemak-DH 适配版 ---
+" 使用 <leader>w + m/n/e/i 快速在分割窗口间跳转 (分别对应 左/下/上/右)
+let g:WhichKeyDesc_Windows_Focus_Left2 = "<leader>wm 左窗口"
+nnoremap <leader>wm <C-w>h
+let g:WhichKeyDesc_Windows_Focus_Down2 = "<leader>wn 下窗口"
+nnoremap <leader>wn <C-w>j
+let g:WhichKeyDesc_Windows_Focus_Up2 = "<leader>we 上窗口"
+nnoremap <leader>we <C-w>k
+let g:WhichKeyDesc_Windows_Focus_Right2 = "<leader>wi 右窗口"
+nnoremap <leader>wi <C-w>l
 
 " --- 窗口分割 (Split) ---
 " 垂直分割窗口
@@ -513,11 +543,10 @@ nmap <leader>ws <action>(SplitHorizontally)
 " --- 窗口关闭 (Close) ---
 " 关闭当前分割窗口
 let g:WhichKeyDesc_Windows_Close_Current = "<leader>wc 关闭当前分割"
-nmap <leader>wc <C-w>c
+nnoremap <leader>wc <C-w>c
 
-" 取消所有分割窗口
 let g:WhichKeyDesc_Windows_UnsplitAll = "<leader>wa 取消所有分割窗口"
-nmap <leader>wo <action>(UnsplitAll)
+nmap <leader>wa <action>(UnsplitAll)
 
 " 取消拆分当前分割窗口
 let g:WhichKeyDesc_Windows_Unsplit = "<leader>wu 取消拆分当前分割窗口"
@@ -529,16 +558,16 @@ nmap <leader>ww <action>(HideAllWindows)
 
 
 "========== y ==========
-"普通模式下将 "+ (复制到剪切板）简化为 <leader>y
-let g:WhichKeyDesc_CopyClipboard = "<leader>y 复制到剪切板"
-vmap <leader>y "+y
 "可视模式下将 "+ (复制到剪切板）简化为 <leader>y
+let g:WhichKeyDesc_CopyClipboard = "<leader>y 复制到剪切板"
+vnoremap <leader>y "+y
+"普通模式下将 "+ (复制到剪切板）简化为 <leader>y
 let g:WhichKeyDesc_CopyClipboard= "<leader>y 复制到剪切板"
-nmap <leader>y "+yy
+nnoremap <leader>y "+yy
 
 
 "========== z ==========
-let g:WhichKeyDesc_Zip = "<leader>z 折叠"
+let g:WhichKeyDesc_Zip = "<leader>z 📂折叠"
 
 "展开所有代码折叠区域(Ctrl + Shift + 加号键)
 let g:WhichKeyDesc_Zip_unZipAll = "<leader>zo 展开所有折叠"
@@ -549,7 +578,7 @@ nmap <leader>zc <action>(CollapseAllRegions)
 
 
 
-
+" ====== 插件部分 ======
 " ================================================================================================
 " 🌸🌸🌸 NERDTree 🌸🌸🌸
 " ================================================================================================
@@ -584,3 +613,10 @@ let g:WhichKeyDesc_easymotionkey = "<leader><leader> 快速跳转插件"
 "普通模式输入s后输入要跳转到单词首字母(或多输入几个字母)
 nmap s <Plug>(easymotion-bd-n)
 let g:WhichKeyDesc_easymotion = "s 快速跳转"
+
+" ================================================================================================
+" 🌸🌸🌸 PTG 🌸🌸🌸
+" ================================================================================================
+"生成 Getter 和 Setter (PTG 插件或原生功能)
+nmap <leader>gp <action>(getterandsetter)
+let g:WhichKeyDesc_GitOrGenerate_PtgGenerate = "<leader>gp 生成Getter和Setter"
