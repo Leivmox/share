@@ -143,7 +143,7 @@ CapsLock & /::SendInput("{Text}¿")
     WinClose("A")
 }
 
-#SC012::Send("#e")
+#SC012::Run "explorer"
 
 ; 最小化当前窗口
 ^!q::WinMinimize("A")
