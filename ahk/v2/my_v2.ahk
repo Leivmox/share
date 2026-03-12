@@ -34,7 +34,7 @@ global ChineseID := 0x08040804
 }
 
 ; 原物理 E 位置 -> 对应 Colemak 的 f
-#f::Send("#e")
+#f::Run "explorer"
 ^!q::WinMinimize("A")
 ^!t::Run("D:\Windows\WindowsTerminal\wt.exe")
 
