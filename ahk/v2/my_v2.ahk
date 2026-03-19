@@ -84,9 +84,19 @@ global ChineseID := 0x08040804
     Esc & i::SendInput("{Right}")
     
     ; --- 编辑 (物理位置) -> Colemak 里的 c 和 v 依然是 c 和 v ---
-    Esc & c::SendInput("^{Insert}")
-    Esc & v::SendInput("+{Insert}")
+    Esc & a::SendInput("^a")             ; <=== 新增：全选
+    Esc & c::SendInput("^c")             ; <=== 修改：Ctrl+C
+    Esc & v::SendInput("^v")
+    Esc & z::SendInput("^z")
+    Esc & s::SendInput("^s")
+    Esc & x::SendInput("^x")
+    Esc & f::SendInput("^f")
+    Esc & h::SendInput("^h")
+    Esc & g::SendInput("^+z")
+    Esc & w::SendInput("^w")  ; Ctrl+W：关闭当前标签页
+    Esc & Insert::SendInput("^{Insert}")
     Esc & Backspace::SendInput("{Delete}")
+    Esc & Enter::SendInput("{Backspace}")
 
     ; --- 标点符号区 ---
     Esc & ,:: {
@@ -95,6 +105,21 @@ global ChineseID := 0x08040804
     }
     Esc & .::SendInput("{Text}。")
     Esc & /::SendInput("{Text}¿") 
+
+; ====== 符号与括号区 ======
+    ; 括号 ()
+    Esc & o::SendInput("{Text}(")
+    Esc & '::SendInput("{Text})")
+
+    ; 方括号 []
+    Esc & l::SendInput("{Text}[")
+    Esc & u::SendInput("{Text}]")
+
+    ; 花括号 {} (注：分号需用反引号 ` 转义，否则会被 AHK 当做注释)
+    Esc & y::SendInput("{Text}{")
+    Esc & `;::SendInput("{Text}}")
+
+    ; ================================
 
     ; --- 系统快捷键 (右Alt) ---
     ; 原物理 L 位置 -> 对应 Colemak 的 i
