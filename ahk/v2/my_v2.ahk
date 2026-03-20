@@ -77,25 +77,29 @@ global ChineseID := 0x08040804
             SendInput("{Esc}")
     }
 
-    ; --- 导航层 (硬件 Colemak 布局下的物理 HJKL 位置，实际输出的是 m n e i) ---
+; --- 导航层 (硬件 Colemak 布局下的物理 HJKL 位置，实际输出的是 m n e i) ---
     Esc & m::SendInput("{Left}")
     Esc & n::SendInput("{Down}")
     Esc & e::SendInput("{Up}")
     Esc & i::SendInput("{Right}")
     
-    ; --- 编辑 (物理位置) -> Colemak 里的 c 和 v 依然是 c 和 v ---
-    Esc & a::SendInput("^a")             ; <=== 新增：全选
-    Esc & c::SendInput("^c")             ; <=== 修改：Ctrl+C
-    Esc & v::SendInput("^v")
-    Esc & z::SendInput("^z")
-    Esc & s::SendInput("^s")
-    Esc & x::SendInput("^x")
-    Esc & f::SendInput("^f")
-    Esc & h::SendInput("^h")
-    Esc & g::SendInput("^+z")
-    Esc & w::SendInput("^w")  ; Ctrl+W：关闭当前标签页
+    ; --- 编辑层 ---
+    Esc & a::SendInput("^a")             ; 全选
+    Esc & c::SendInput("^c")             ; Ctrl+C
+    Esc & v::SendInput("^v")             ; Ctrl+V
+    Esc & z::SendInput("^z")             ; 撤销
+    Esc & s::SendInput("^s")             ; 保存
+    Esc & x::SendInput("^x")             ; 剪切
+    Esc & f::SendInput("^f")             ; 查找
+    Esc & g::SendInput("^+z")            ; 重做
+    Esc & w::SendInput("^w")             ; 关闭标签页
+
+    
+    ; --- 特殊功能键 ---
+    Esc & h::SendInput("{Backspace}")    ; 退格方案
+    Esc & Backspace::SendInput("^{Backspace}")
     Esc & Insert::SendInput("^{Insert}")
-    Esc & Backspace::SendInput("{Delete}")
+    ;Esc & Backspace::SendInput("{Delete}")
     Esc & Enter::SendInput("{Backspace}")
 
     ; --- 标点符号区 ---
@@ -112,8 +116,8 @@ global ChineseID := 0x08040804
     Esc & '::SendInput("{Text})")
 
     ; 方括号 []
-    Esc & l::SendInput("{Text}[")
-    Esc & u::SendInput("{Text}]")
+    Esc & l::SendInput("[")
+    Esc & u::SendInput("]")
 
     ; 花括号 {} (注：分号需用反引号 ` 转义，否则会被 AHK 当做注释)
     Esc & y::SendInput("{Text}{")
