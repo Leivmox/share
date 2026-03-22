@@ -58,6 +58,9 @@ SC032::h
 ; 【控制与增强层】 (完全依赖物理 CapsLock)
 ; ==================================================================
 
+; 退格 (QWERTY 的 M 鍵)
+CapsLock & SC032::Send "{Backspace}"
+
 ; --- 强制切输入法 ---
 CapsLock & Space:: {
     if WinExist("A")
@@ -114,8 +117,10 @@ CapsLock & /::SendInput("{Text}¿")
 >!SC023::SendInput("{Text}^")  ; 物理 H
 >!SC024::SendInput("{Text}&")  ; 物理 J
 >!SC025::SendInput("{Text}*")  ; 物理 K
->!SC026::SendInput("{Text}(")  ; 物理 L
->!SC027::SendInput("{Text})")  ; 物理 ;
+;>!SC026::SendInput("{Text}(")  ; 物理 L
+
+CapsLock & SC027::SendInput("{Text}(")  ; 物理 ;
+CapsLock & SC028::SendInput("{Text})")  ; 物理 '
 
 ; --- 右 Alt + Q W E R (物理位置) 输出 _ - + = ---
 >!SC010::SendInput("{Text}_")  ; 物理 Q
@@ -124,15 +129,25 @@ CapsLock & /::SendInput("{Text}¿")
 >!SC013::SendInput("{Text}=")  ; 物理 R
 
 ; --- 右 Alt + U I O P (物理位置) 输出 [ ] { } ---
->!SC016::SendInput("{Text}[")  ; 物理 U
->!SC017::SendInput("{Text}]")  ; 物理 I
->!SC018::SendInput("{Text}{")  ; 物理 O
->!SC019::SendInput("{Text}}")  ; 物理 P
+;>!SC016::SendInput("{Text}[")  ; 物理 U
+;>!SC017::SendInput("{Text}]")  ; 物理 I
+;>!SC018::SendInput("{Text}{")  ; 物理 O
+;>!SC019::SendInput("{Text}}")  ; 物理 P
+
+; --- Capslock + U I O P (物理位置) 输出 [ ] { } ---
+CapsLock & SC016::SendInput("{Text}[")  ; 物理 U
+CapsLock & SC017::SendInput("{Text}]")  ; 物理 I
+CapsLock & SC018::SendInput("{Text}{")  ; 物理 O
+CapsLock & SC019::SendInput("{Text}}")  ; 物理 P
 
 
 ; ==================================================================
 ; 【全局快捷键区】
 ; ==================================================================
+; --- Backspace 與 \ 互換 ---
+SC00E::\           ; 將物理 Backspace (SC00E) 映射為 \ (按 Shift 自動出 |)
+SC02B::Backspace   ; 將物理 \ (SC02B) 映射為 Backspace
+
 
 !q:: {
     if !WinExist("A")
