@@ -154,8 +154,8 @@ SC03A & SC028::SendInput("{Text})")  ; CapsLock + 物理 ' (SC028)
 >!SC013::SendInput("{Text}=")  ; 物理 R
 
 ; --- Capslock + U I O P (物理位置) 输出 [ ] { } ---
-SC03A & SC016::SendInput("{Text}[")  ; 物理 U (SC016)
-SC03A & SC017::SendInput("{Text}]")  ; 物理 I (SC017)
+SC03A & SC016::SendInput("[")  ; 物理 U (SC016)
+SC03A & SC017::SendInput("]")  ; 物理 I (SC017)
 SC03A & SC018::SendInput("{Text}{")  ; 物理 O (SC018)
 SC03A & SC019::SendInput("{Text}}")  ; 物理 P (SC019)
 
