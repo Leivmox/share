@@ -51,9 +51,8 @@ global ChineseID := 0x08040804
 #HotIf ; --- 开发工具专属区结束 ---
 
 ; ==================================================================
-; 【非 CS2 环境生效区】 (包含原来的控制区与增强功能区)
+; 【控制区与增强功能区】 (原非 CS2 环境生效区，现已全局生效)
 ; ==================================================================
-#HotIf !WinActive("ahk_exe cs2.exe")
     ; --- 控制区：模式切换 (原本的 CapsLock 现已全面替换为 Esc) ---
     ; Esc + 空格 -> 强制切英文
     Esc & Space:: {
@@ -68,16 +67,29 @@ global ChineseID := 0x08040804
     }
 
     ; --- 单按 Esc 恢复正常 Esc 功能 (不切输入法) ---
+    ;*Esc:: {
+    ;    if GetKeyState("Shift", "P")
+    ;        SendInput("+{Esc}")
+    ;    else if GetKeyState("Ctrl", "P")
+    ;        SendInput("^{Esc}")
+    ;    else
+    ;        SendInput("{Esc}")
+    ;}
+    ; --- 单按 Esc 恢复正常 Esc 功能 (针对游戏引擎优化) ---
     *Esc:: {
+        ; AHK 原生机制保证了：作为前缀键，只有在单按松开时才会走到这里。
+        ; 设置 50 毫秒的按压持续时间，确保游戏底层轮询能抓取到按键
+        SetKeyDelay(-1, 50) 
+        
         if GetKeyState("Shift", "P")
-            SendInput("+{Esc}")
+            SendEvent("+{Esc}")
         else if GetKeyState("Ctrl", "P")
-            SendInput("^{Esc}")
+            SendEvent("^{Esc}")
         else
-            SendInput("{Esc}")
+            SendEvent("{Esc}")
     }
 
-; --- 导航层 (硬件 Colemak 布局下的物理 HJKL 位置，实际输出的是 m n e i) ---
+    ; --- 导航层 (硬件 Colemak 布局下的物理 HJKL 位置，实际输出的是 m n e i) ---
     Esc & m::SendInput("{Left}")
     Esc & n::SendInput("{Down}")
     Esc & e::SendInput("{Up}")
@@ -93,6 +105,7 @@ global ChineseID := 0x08040804
     Esc & f::SendInput("^f")             ; 查找
     Esc & g::SendInput("^+z")            ; 重做
     Esc & w::SendInput("^w")             ; 关闭标签页
+    Esc & [::SendInput("^[")             ; 关闭标签页
 
     
     ; --- 特殊功能键 ---
@@ -110,7 +123,7 @@ global ChineseID := 0x08040804
     Esc & .::SendInput("{Text}。")
     Esc & /::SendInput("{Text}¿") 
 
-; ====== 符号与括号区 ======
+    ; ====== 符号与括号区 ======
     ; 括号 ()
     Esc & o::SendInput("{Text}(")
     Esc & '::SendInput("{Text})")
@@ -130,7 +143,6 @@ global ChineseID := 0x08040804
     >!i::DllCall("User32\LockWorkStation")
     ; 原物理 P 位置 -> 对应 Colemak 的 ;
     >!;::Send("#p")  
-#HotIf ; --- 非 CS2 环境区结束 ---
 
 ; --- 辅助函数 ---
 ShowTip(Text) {
