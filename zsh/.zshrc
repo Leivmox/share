@@ -31,6 +31,8 @@
 
 # --- 快捷别名 ---
 alias ..="cd ../"
+alias ...='cd ../..'
+alias ....='cd ../../..'
 alias ll='ls -lh --color=auto --group-directories-first'
 alias la='ls -lah --color=auto --group-directories-first'
 alias mv='mv -i -v'
@@ -38,6 +40,8 @@ alias cp='cp -i -v'
 alias :q='exit'
 alias :wq='exit'
 alias msbr='mvn spring-boot:run -Dfile.encoding=UTF-8'
+alias myip='curl -L ip.sh'
+alias path='echo $PATH | tr ":" "\n"'
 
 # --- Screen 工具别名 ---
 alias scs='screen -S'   # 创建会话
@@ -62,6 +66,12 @@ BLUE='\033[0;34m'   # 蓝色
 PURPLE='\033[0;35m' # 紫色
 BOLD='\033[1m'      # 加粗
 NC='\033[0m'        # 重置颜色
+
+
+# 创建并立刻进入目录
+mcd() {
+  mkdir -p "$1" && cd "$1"
+}
 
 # ======================================
 # ======== 🛠️ 编译与运行 🛠️ ==========
