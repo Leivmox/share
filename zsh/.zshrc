@@ -99,6 +99,37 @@ cppo() {
     ./out/"${1%.*}" || { echo "错误: 运行失败。"; return 1; }
 }
 
+
+# 创建 out 文件夹, 编译 Java 代码并运行
+javao() {
+    # 1. 检查是否传入了参数
+    if [ -z "$1" ]; then echo "错误: 未提供 Java 源文件!"; return 1; fi
+    
+    # 2. 检查 Java 环境是否安装
+    if ! command -v javac &>/dev/null || ! command -v java &>/dev/null; then 
+        echo "错误: javac 或 java 未安装! 请检查 JDK 环境。"; return 1; 
+    fi
+    
+    # 3. 检查文件是否存在
+    if [ ! -f "$1" ]; then echo "错误: 源文件 '$1' 不存在!"; return 1; fi
+    
+    # 4. 创建 out 目录
+    mkdir -p out || { echo "错误: 无法创建 'out' 目录。"; return 1; }
+    
+    # 5. 编译 Java 文件 (-d 参数会自动将生成的 .class 文件放入指定的 out 目录)
+    command javac -d out "$1" || { echo "错误: 编译失败。"; return 1; }
+    
+    # 6. 提取类名
+    # 使用 basename 去掉可能存在的路径 (例如 src/Main.java 变成 Main.java)
+    # 然后 ${...%.*} 去掉 .java 后缀，得到纯类名 Main
+    local filename=$(basename "$1")
+    local classname="${filename%.*}"
+    
+    # 7. 运行编译好的类 (-cp 指定类路径为 out 目录)
+    echo ">>> 正在运行类 ${classname} ..."
+    command java -cp out "$classname" || { echo "错误: 运行失败。"; return 1; }
+}
+
 # ======================================
 # ======== 🚀🚀🚀 Git 🚀🚀🚀 ==========
 # ======================================
