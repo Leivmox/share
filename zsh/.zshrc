@@ -33,8 +33,8 @@
 alias ..="cd ../"
 alias ...='cd ../..'
 alias ....='cd ../../..'
-alias ll='ls -lh --color=auto --group-directories-first'
-alias la='ls -lah --color=auto --group-directories-first'
+alias ll='ls -lhF --color=auto --group-directories-first'
+alias la='ls -lahF --color=auto --group-directories-first'
 alias mv='mv -i -v'
 alias cp='cp -i -v'
 alias :q='exit'
