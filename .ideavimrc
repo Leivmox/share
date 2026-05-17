@@ -42,6 +42,8 @@ set keep-english-in-normal
 set clipboard=unnamedplus
 
 set showMarksInGutter
+
+
 " ================================================================================================
 " 🌍🌍🌍 No Leader Keymaps 🌍🌍🌍
 " ================================================================================================
@@ -64,14 +66,17 @@ inoremap jj <Esc>
 inoremap jk <Esc>
 
 "--快速上下移动
-nnoremap J 5j
-nnoremap K 5k
-vnoremap J 5j
-vnoremap K 5k
+"nnoremap J 5j
+"nnoremap K 5k
+"vnoremap J 5j
+"vnoremap K 5k
 
 "快速移动到开头和结尾
 nnoremap H ^
 nnoremap L $
+
+nnoremap <C-d> 10j
+nnoremap <C-u> 10k
 
 " 将 PageDown 映射为向下滚动半页 (Ctrl+d)
 noremap <PageDown> <C-d>
@@ -126,8 +131,8 @@ let g:WhichKeyDesc_bookmark = "ma 书签"
 nmap ma <action>(ToggleBookmark)
 
 "将Ctrl + s 映射为保存文档(也可以在VIM设置里将此快捷键设置为IDEA的快捷键)
-nmap <C-S> <action>(SaveAll)
-imap <C-S> <Esc><action>(SaveAll)
+nmap <C-s> <action>(SaveAll)
+imap <C-s> <Esc><action>(SaveAll)
 
 
 " 当你按下 ' 时，实际执行 ` 的功能 (精确跳转到光标位置)
@@ -433,7 +438,7 @@ nmap <leader>nl :nohlsearch<CR>
 let g:WhichKeyDesc_NERDTreeOrNew_NewDir = "<leader>nd 新建文件夹"
 nmap <leader>nd <action>(NewDir)
 "在当前目录新建类
-let g:WhichKeyDesc_NERDTreeOrNew_NewClass = "<leader>nc 新建.Class"
+let g:WhichKeyDesc_NERDTreeOrNew_NewClass = "<leader>nc 新建类"
 nmap <leader>nc <action>(NewClass)
 
 
@@ -493,7 +498,7 @@ let g:WhichKeyDesc_Show_Stop = "<leader>st 停止运行"
 nmap <leader>st <action>(Stop)
 "选中文件中所有匹配项,一般用多光标操作(Ctrl+Alt+Shift+J)
 let g:WhichKeyDesc_SelectAll = "<leader>sa 选中所有匹配项"
-nmap <leader>sa <action>(SelectAllOccurrences)
+xmap <leader>sa <action>(SelectAllOccurrences)
 
 "========= t ==========
 " 标签页操作,请多使用vim原生gt/gT
@@ -609,7 +614,7 @@ let g:WhichKeyDesc_easymotionkey = "<leader><leader> 快速跳转插件"
 "普通模式输入s后输入要跳转到单词首字母(或多输入几个字母)
 nmap s <Plug>(easymotion-bd-n)
 let g:WhichKeyDesc_easymotion = "s 快速跳转"
-
+nmap <Leader><leader>f <Leader><leader>s
 " ================================================================================================
 " 🌸🌸🌸 PTG 🌸🌸🌸
 " ================================================================================================
