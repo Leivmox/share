@@ -140,7 +140,7 @@ alias ga='git add'
 alias gaa='git add .'
 alias gpl='git pull'
 alias gph="git push"
-alias gcm='gc' # gc 是下面的函数
+alias gc="git commit"
 alias gplall="gr && execute_gpl_and_ginfo_in_folders" # <-- 已更新
 alias gacpall="gr && execute_gpl_gacp_and_hhh_in_folders"
 alias gitall='gacpall'
@@ -157,8 +157,8 @@ check_git_repo() {
 }
 
 # --- 简化 commit 命令 ---
-# 用法: gc "你的提交信息"
-function gc() {
+# 用法: gcm "你的提交信息"
+function gcm() {
     if [ -z "$1" ]; then
         echo "错误: 请提供提交信息。"
         return 1
