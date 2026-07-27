@@ -1,0 +1,23 @@
+# 1. 核心运行库（提供基础极速环境和 ll 等常用 alias）
+zmodule environment
+#zmodule utility
+#zmodule git
+
+# 2. 你的专属主题：sorin
+#zmodule prompt-pwd
+#zmodule sorin
+# 2. 跨界加载原版 Oh My Zsh 主题
+# 加载 OMZ 的基础函数库（修复 handler 报错）
+zmodule ohmyzsh/ohmyzsh --source lib/functions.zsh
+zmodule ohmyzsh/ohmyzsh --source lib/async_prompt.zsh
+# 加载外观和 Git 状态依赖
+zmodule ohmyzsh/ohmyzsh --source lib/theme-and-appearance.zsh
+zmodule ohmyzsh/ohmyzsh --source lib/git.zsh
+# 加载原汁原味的 OMZ 版 sorin 主题
+zmodule ohmyzsh/ohmyzsh --source themes/sorin.zsh-theme
+
+# 3. 你的两个核心插件
+# 自动补全建议
+zmodule zsh-users/zsh-autosuggestions
+# 语法高亮（注意：高亮插件必须在最后一行）
+zmodule zsh-users/zsh-syntax-highlighting
